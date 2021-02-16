@@ -30,11 +30,11 @@ namespace laba1
         private void frmMain_Shown(object sender, EventArgs e)
         {
             //Создание объекта Линия, цвет красный, толщина 3, и его отрисовка
-            Line line = new Line(Color.Red, 3);
+            var line = new Line(Color.Red, 3);
             line.Draw(g, 50, 50, 100, 100);
 
             //Создание объекта Ломаная, цвет лесной зеленый, толщина 4, и его отрисовка
-            BrokenLine brokenLine = new BrokenLine(Color.ForestGreen, 4);
+            var brokenLine = new BrokenLine(Color.ForestGreen, 4);
             //Массив точек ломаной
             Point[] brokenLine_points =
             {
@@ -47,11 +47,11 @@ namespace laba1
             brokenLine.Draw(g, brokenLine_points);
 
             //Объект эллипс
-            Ellipse ellipse = new Ellipse(Color.Green, Color.Blue, 10);
+            var ellipse = new Ellipse(Color.Green, Color.Blue, 10);
             ellipse.Draw(g, 150, 50, 50, 50);
 
             //Объект прямоугольник
-            Rectangle rectangle = new Rectangle(Color.Black, Color.Red, 3);
+            var rectangle = new Rectangle(Color.Black, Color.Red, 3);
             rectangle.Draw(g, 250, 50, 50, 50);
 
             //Массив вершин многоугольника
@@ -66,11 +66,11 @@ namespace laba1
             };
 
             //Объект многоугольник
-            Polygon polygon = new Polygon(Color.Magenta, Color.White, 3);
+            var polygon = new Polygon(Color.Magenta, Color.White, 3);
             polygon.Draw(g, polygon_points);
 
             //Объект окружность
-            Circle circle = new Circle(Color.DarkTurquoise, Color.Crimson, 5);
+            var circle = new Circle(Color.DarkTurquoise, Color.Crimson, 5);
             circle.Draw(g, 250, 300, 100);
         }
     }
