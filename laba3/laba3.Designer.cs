@@ -561,6 +561,7 @@
             // 
             // colorDialog_Fill
             // 
+            this.colorDialog_Fill.Color = System.Drawing.Color.White;
             this.colorDialog_Fill.FullOpen = true;
             // 
             // cDrawField
@@ -572,7 +573,8 @@
             this.cDrawField.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.cDrawField.TabIndex = 7;
             this.cDrawField.TabStop = false;
-            this.cDrawField.Click += new System.EventHandler(this.cDrawField_Click);
+            this.cDrawField.MouseClick += new System.Windows.Forms.MouseEventHandler(this.cDrawField_MouseClick);
+            this.cDrawField.MouseMove += new System.Windows.Forms.MouseEventHandler(this.cDrawField_MouseMove);
             // 
             // btnResetTab
             // 
