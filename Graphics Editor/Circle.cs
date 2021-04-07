@@ -8,6 +8,7 @@ using System.Drawing;
 public class Circle : Shape
 {
     private Point p0;           //Координаты центра круга
+    private Point p1;           //Координаты края круга
     private int cirWidth;       //Ширина прямоугольника, описанного вокруг круга
     private int cirHeight;      //Высота прямоугольника, описанного вокруг круга
     private float radius;       //Радиус круга
@@ -19,40 +20,71 @@ public class Circle : Shape
         aMainPenColor = penColor;
         aMainPenWidth = width;
         aMainFillColor = fillColor;
-        mainPen = new Pen(aMainPenColor, aMainPenWidth);
-        mainBrush = new SolidBrush(aMainFillColor);
+        aPreShowPenWidth = width;
+        mainBrush = new SolidBrush(mainFillColor);
+        mainPen = new Pen(mainPenColor, mainPenWidth);
         aPreShowPenColor = Color.FromArgb(150, penColor);
-        preShowPen = new Pen(aPreShowPenColor, aMainPenWidth);
+        preShowPen = new Pen(preShowPenColor, preShowPenWidth);
         aPreShowFillColor = Color.FromArgb(150, fillColor);
-        preShowBrush = new SolidBrush(aPreShowFillColor);
+        preShowBrush = new SolidBrush(preShowFillColor);
         showMode = TShowMode.MAIN_MODE;
     }
 
     //Отрисовка круга по данным из полей класса
     public override void Draw(Graphics g)
     {
-        p0 = Location[1];
-        cirWidth = Math.Abs(Location[2].X - Location[1].X);
-        cirHeight = Math.Abs(Location[2].Y - Location[1].Y);
+        if (pointsNumber != 2)
+            return;
+
+        cirWidth = Math.Abs(p1.X - p0.X);
+        cirHeight = Math.Abs(p1.Y - p0.Y);
         radius = (float)Math.Round(Math.Sqrt((double)cirWidth * cirWidth + cirHeight * cirHeight));
 
         if (showMode == TShowMode.MAIN_MODE)
         {
-            mainPen.Color = aMainPenColor;
-            mainBrush.Color = aMainFillColor;
-            mainPen.Width = aMainPenWidth;
+            mainPen.Color = mainPenColor;
+            mainBrush.Color = mainFillColor;
+            mainPen.Width = mainPenWidth;
 
             g.FillEllipse(mainBrush, p0.X - radius, p0.Y - radius, radius * 2, radius * 2);
             g.DrawEllipse(mainPen, p0.X - radius, p0.Y - radius, radius * 2, radius * 2);
         }
         else if (showMode == TShowMode.PRE_SHOW)
         {
-            preShowPen.Color = Color.FromArgb(150, aMainPenColor);
-            preShowBrush.Color = Color.FromArgb(150, aMainFillColor);
-            preShowPen.Width = aMainPenWidth;
+            preShowPen.Color = Color.FromArgb(150, preShowPenColor);
+            preShowBrush.Color = Color.FromArgb(150, preShowFillColor);
+            preShowPen.Width = preShowPenWidth;
 
             g.FillEllipse(preShowBrush, p0.X - radius, p0.Y - radius, radius * 2, radius * 2);
             g.DrawEllipse(preShowPen, p0.X - radius, p0.Y - radius, radius * 2, radius * 2);
         }
+    }
+
+    //Установить очередную точку круга
+    public override void SetPoint(Point point)
+    {
+        if (pointsNumber == 0)
+            p0 = point;
+        else
+            p1 = point;
+
+        if (pointsNumber < 2)
+            pointsNumber++;
+    }
+
+    //Очистить информацию о точках круга
+    public override void ClearPoints()
+    {
+        pointsNumber = 0;
+        p0 = Point.Empty;
+        p1 = Point.Empty;
+        cirWidth = 0;
+        cirHeight = 0;
+    }
+
+    //Фигура не сложная
+    public override bool isComplex()
+    {
+        return false;
     }
 }

@@ -99,10 +99,8 @@ namespace laba1
             cDrawField.Image = pictures[activeTab];
             graphics = Graphics.FromImage(cDrawField.Image);
 
-            currentShape.Location.Clear();
-            preShowShape.Location.Clear();
-            currentShape.pointsNumber = 0;
-            preShowShape.pointsNumber = 0;
+            currentShape.ClearPoints();
+            preShowShape.ClearPoints();
             shapeInProgress = false;
         }
 
@@ -329,7 +327,6 @@ namespace laba1
             btnResetTab.Focus();
 
             currentShape = new BrokenLine(colorDialog_Line.Color, (float)selectLineWidth.Value);
-            currentShape.isComplex = true;
             preShowShape = new Line(colorDialog_Line.Color, (float)selectLineWidth.Value);
             preShowShape.showMode = Shape.TShowMode.PRE_SHOW;
             shapeInProgress = false;
@@ -366,7 +363,6 @@ namespace laba1
             btnResetTab.Focus();
 
             currentShape = new Polygon(colorDialog_Line.Color, colorDialog_Fill.Color, (float)selectLineWidth.Value); ;
-            currentShape.isComplex = true;
             preShowShape = new Line(colorDialog_Line.Color, (float)selectLineWidth.Value);
             preShowShape.showMode = Shape.TShowMode.PRE_SHOW;
             shapeInProgress = false;
@@ -431,7 +427,6 @@ namespace laba1
         private void toolPanelBtn_BrokenLine_Click(object sender, EventArgs e)
         {
             currentShape = new BrokenLine(colorDialog_Line.Color, (float)selectLineWidth.Value);
-            currentShape.isComplex = true;
             preShowShape = new Line(colorDialog_Line.Color, (float)selectLineWidth.Value);
             preShowShape.showMode = Shape.TShowMode.PRE_SHOW;
             shapeInProgress = false;
@@ -458,7 +453,6 @@ namespace laba1
         private void toolPanelBtn_Polygon_Click(object sender, EventArgs e)
         {
             currentShape = new Polygon(colorDialog_Line.Color, colorDialog_Fill.Color, (float)selectLineWidth.Value); ;
-            currentShape.isComplex = true;
             preShowShape = new Line(colorDialog_Line.Color, (float)selectLineWidth.Value);
             preShowShape.showMode = Shape.TShowMode.PRE_SHOW;
             shapeInProgress = false;
@@ -525,14 +519,14 @@ namespace laba1
                     currentShape.aMainPenColor = colorDialog_Line.Color;
                     currentShape.aMainFillColor = colorDialog_Fill.Color;
                     currentShape.aMainPenWidth = (float)selectLineWidth.Value;
-                    currentShape.Location[++currentShape.pointsNumber] = new Point(e.X, e.Y);
+                    currentShape.SetPoint(e.Location);
                     currentShape.isFinish = false;
                     shapeInProgress = true;
 
-                    preShowShape.aMainPenColor = colorDialog_Line.Color;
-                    preShowShape.aMainFillColor = colorDialog_Fill.Color;
-                    preShowShape.aMainPenWidth = (float)selectLineWidth.Value;
-                    preShowShape.Location[++preShowShape.pointsNumber] = new Point(e.X, e.Y);
+                    preShowShape.aPreShowPenColor = colorDialog_Line.Color;
+                    preShowShape.aPreShowFillColor = colorDialog_Fill.Color;
+                    preShowShape.aPreShowPenWidth = (float)selectLineWidth.Value;
+                    preShowShape.SetPoint(e.Location);
                     preShowShape.isFinish = false;
                 }
             }
@@ -547,24 +541,23 @@ namespace laba1
                 if (e.Button == MouseButtons.Left)
                 {
                     //Если фигура сложная, то продолжаем рисование
-                    if (currentShape.isComplex)
+                    if (currentShape.isComplex())
                     {
-                        currentShape.Location[++currentShape.pointsNumber] = new Point(e.X, e.Y);
+                        currentShape.SetPoint(e.Location);
                         currentShape.Draw(graphics);
-                        preShowShape.Location[preShowShape.pointsNumber - 1] = new Point(e.X, e.Y);
+                        preShowShape.ClearPoints();
+                        preShowShape.SetPoint(e.Location);
                         preShowBuffer = new Bitmap((Bitmap)cDrawField.Image);
                     }
                     //иначе, заканчиваем рисование фигуры
                     else
                     {
-                        preShowShape.Location.Clear();
-                        preShowShape.pointsNumber = 0;
-                        currentShape.Location[++currentShape.pointsNumber] = new Point(e.X, e.Y);
+                        preShowShape.ClearPoints();
+                        currentShape.SetPoint(e.Location);
                         currentShape.isFinish = true;
                         currentShape.Draw(graphics);
                         shapes[shapesNumber++] = currentShape;
-                        currentShape.pointsNumber = 0;
-                        currentShape.Location.Clear();
+                        currentShape.ClearPoints();
                         shapeInProgress = false;
                         preShowBuffer = new Bitmap((Bitmap)cDrawField.Image);
                     }
@@ -573,14 +566,12 @@ namespace laba1
                 else if (e.Button == MouseButtons.Right)
                 {
                     //Если фигура сложная, то завершаем ее рисование
-                    if (currentShape.isComplex)
+                    if (currentShape.isComplex())
                     {
-                        if (currentShape.pointsNumber < 2)
+                        if (currentShape.PointsNumber < 2)
                         {
-                            currentShape.Location.Clear();
-                            preShowShape.Location.Clear();
-                            currentShape.pointsNumber = 0;
-                            preShowShape.pointsNumber = 0;
+                            currentShape.ClearPoints();
+                            preShowShape.ClearPoints();
                             shapeInProgress = false;
                         }
                         else
@@ -588,10 +579,8 @@ namespace laba1
                             currentShape.isFinish = true;
                             currentShape.Draw(graphics);
                             shapes[shapesNumber++] = currentShape;
-                            preShowShape.Location.Clear();
-                            currentShape.Location.Clear();
-                            currentShape.pointsNumber = 0;
-                            preShowShape.pointsNumber = 0;
+                            preShowShape.ClearPoints();
+                            currentShape.ClearPoints();
                             shapeInProgress = false;
                             preShowBuffer = new Bitmap((Bitmap)cDrawField.Image);
                         }
@@ -599,10 +588,8 @@ namespace laba1
                     //Иначе, отменяем рисование фигуры
                     else
                     {
-                        currentShape.Location.Clear();
-                        preShowShape.Location.Clear();
-                        currentShape.pointsNumber = 0;
-                        preShowShape.pointsNumber = 0;
+                        currentShape.ClearPoints();
+                        preShowShape.ClearPoints();
                         shapeInProgress = false;
                     }
                 }
@@ -621,8 +608,7 @@ namespace laba1
                 cDrawField.Image = pictures[activeTab];
                 graphics = Graphics.FromImage(cDrawField.Image);
 
-                preShowShape.Location[2] = new Point(e.X, e.Y);
-                preShowShape.pointsNumber = 2;
+                preShowShape.SetPoint(e.Location);
                 preShowShape.Draw(graphics);
                 cDrawField.Refresh();
             }

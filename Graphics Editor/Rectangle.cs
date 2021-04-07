@@ -8,6 +8,7 @@ using System.Drawing;
 public class Rectangle : Shape
 {
     private Point p0;           //Координаты верхнего левого угла
+    private Point p1;           //Координаты нижнего правого угла
     private int recWidth;       //Ширина прямоугольника
     private int recHeight;      //Высота прямоугольника
 
@@ -18,50 +19,81 @@ public class Rectangle : Shape
         aMainPenColor = penColor;
         aMainPenWidth = width;
         aMainFillColor = fillColor;
-        mainPen = new Pen(aMainPenColor, aMainPenWidth);
-        mainBrush = new SolidBrush(aMainFillColor);
+        aPreShowPenWidth = width;
+        mainBrush = new SolidBrush(mainFillColor);
+        mainPen = new Pen(mainPenColor, mainPenWidth);
         aPreShowPenColor = Color.FromArgb(150, penColor);
-        preShowPen = new Pen(aPreShowPenColor, aMainPenWidth);
+        preShowPen = new Pen(preShowPenColor, preShowPenWidth);
         aPreShowFillColor = Color.FromArgb(150, fillColor);
-        preShowBrush = new SolidBrush(aPreShowFillColor);
+        preShowBrush = new SolidBrush(preShowFillColor);
         showMode = TShowMode.MAIN_MODE;
     }
 
     //Отрисовка прямоугольника по данным из полей класса
     public override void Draw(Graphics g)
     {
-        int recWidth0 = Location[2].X - Location[1].X;
-        int recHeight0 = Location[2].Y - Location[1].Y;
-        Point position = new Point(Location[1].X, Location[1].Y);
+        if (pointsNumber != 2)
+            return;
+
+        int recWidth0 = p1.X - p0.X;
+        int recHeight0 = p1.Y - p0.Y;
+        Point oldPosition = new Point(p0.X, p0.Y);
 
         if (recWidth0 < 0)
-            position.X = Location[1].X + recWidth0;
+            p0.X = p0.X + recWidth0;
         if (recHeight0 < 0)
-            position.Y = Location[1].Y + recHeight0;
-
-        p0 = position;
+            p0.Y = p0.Y + recHeight0;        
 
         recWidth = Math.Abs(recWidth0);
         recHeight = Math.Abs(recHeight0);
 
         if (showMode == TShowMode.MAIN_MODE)
         {
-            mainPen.Color = aMainPenColor;
-            mainBrush.Color = aMainFillColor;
-            mainPen.Width = aMainPenWidth; 
+            mainPen.Color = mainPenColor;
+            mainBrush.Color = mainFillColor;
+            mainPen.Width = mainPenWidth; 
 
             g.FillRectangle(mainBrush, p0.X, p0.Y, recWidth, recHeight);
             g.DrawRectangle(mainPen, p0.X, p0.Y, recWidth, recHeight);
         }
         else if (showMode == TShowMode.PRE_SHOW)
         {
-            preShowPen.Color = Color.FromArgb(150, aMainPenColor);
-            preShowBrush.Color = Color.FromArgb(150, aMainFillColor);
-            preShowPen.Width = aMainPenWidth;
+            preShowPen.Color = Color.FromArgb(150, preShowPenColor);
+            preShowBrush.Color = Color.FromArgb(150, preShowFillColor);
+            preShowPen.Width = preShowPenWidth;
 
             g.FillRectangle(preShowBrush, p0.X, p0.Y, recWidth, recHeight);
             g.DrawRectangle(preShowPen, p0.X, p0.Y, recWidth, recHeight);
         }
-        
+
+        p0 = oldPosition;
+    }
+
+    //Установить очередную точку прямоугольника
+    public override void SetPoint(Point point)
+    {
+        if (pointsNumber == 0)
+            p0 = point;
+        else
+            p1 = point;
+
+        if (pointsNumber < 2)
+            pointsNumber++;
+    }
+
+    //Очистить информацию о точках прямоугольника
+    public override void ClearPoints()
+    {
+        pointsNumber = 0;
+        p0 = Point.Empty;
+        p1 = Point.Empty;
+        recHeight = 0;
+        recWidth = 0;
+    }
+
+    //Фигура не сложная
+    public override bool isComplex()
+    {
+        return false;
     }
 }

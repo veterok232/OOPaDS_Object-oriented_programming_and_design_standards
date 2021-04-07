@@ -6,6 +6,7 @@ using System.Drawing;
 public class Ellipse : Shape
 {
     private Point p0;           //Координаты левого верхнего угла прямоугольника, в который вписан эллипс
+    private Point p1;           //Координаты правого нижнего угла прямоугольника, в который вписан эллипс
     private int ellWidth;       //Ширина прямоугольника, в который вписан эллипс
     private int ellHeight;      //Высота прямоугольника, в который вписан эллипс
 
@@ -16,39 +17,70 @@ public class Ellipse : Shape
         aMainPenColor = penColor;
         aMainPenWidth = width;
         aMainFillColor = fillColor;
-        mainPen = new Pen(aMainPenColor, aMainPenWidth);
-        mainBrush = new SolidBrush(aMainFillColor);
+        aPreShowPenWidth = width;
+        mainBrush = new SolidBrush(mainFillColor);
+        mainPen = new Pen(mainPenColor, mainPenWidth);
         aPreShowPenColor = Color.FromArgb(150, penColor);
-        preShowPen = new Pen(aPreShowPenColor, aMainPenWidth);
+        preShowPen = new Pen(preShowPenColor, preShowPenWidth);
         aPreShowFillColor = Color.FromArgb(150, fillColor);
-        preShowBrush = new SolidBrush(aPreShowFillColor);
+        preShowBrush = new SolidBrush(preShowFillColor);
         showMode = TShowMode.MAIN_MODE;
     }
 
     //Отрисока эллипса по данным из полей класса
     public override void Draw(Graphics g)
     {
-        p0 = Location[1];
-        ellWidth = Location[2].X - Location[1].X;
-        ellHeight = Location[2].Y - Location[1].Y;
+        if (pointsNumber != 2)
+            return;
+
+        ellWidth = p1.X - p0.X;
+        ellHeight = p1.Y - p0.Y;
 
         if (showMode == TShowMode.MAIN_MODE)
         {
-            mainPen.Color = aMainPenColor;
-            mainBrush.Color = aMainFillColor;
-            mainPen.Width = aMainPenWidth;
+            mainPen.Color = mainPenColor;
+            mainBrush.Color = mainFillColor;
+            mainPen.Width = mainPenWidth;
 
             g.FillEllipse(mainBrush, p0.X, p0.Y, ellWidth, ellHeight);
             g.DrawEllipse(mainPen, p0.X, p0.Y, ellWidth, ellHeight);
         }
         else if (showMode == TShowMode.PRE_SHOW)
         {
-            preShowPen.Color = Color.FromArgb(150, aMainPenColor);
-            preShowBrush.Color = Color.FromArgb(150, aMainFillColor);
-            preShowPen.Width = aMainPenWidth;
+            preShowPen.Color = Color.FromArgb(150, preShowPenColor);
+            preShowBrush.Color = Color.FromArgb(150, preShowFillColor);
+            preShowPen.Width = preShowPenWidth;
 
             g.FillEllipse(preShowBrush, p0.X, p0.Y, ellWidth, ellHeight);
             g.DrawEllipse(preShowPen, p0.X, p0.Y, ellWidth, ellHeight);
         }
+    }
+
+    //Установить очередную точку эллипса
+    public override void SetPoint(Point point)
+    {
+        if (pointsNumber == 0)
+            p0 = point;
+        else
+            p1 = point;
+
+        if (pointsNumber < 2)
+            pointsNumber++;
+    }
+
+    //Очистить информацию о точках эллипса
+    public override void ClearPoints()
+    {
+        pointsNumber = 0;
+        p0 = Point.Empty;
+        p1 = Point.Empty;
+        ellWidth = 0;
+        ellHeight = 0;
+    }
+
+    //Фигура не сложная
+    public override bool isComplex()
+    {
+        return false;
     }
 }

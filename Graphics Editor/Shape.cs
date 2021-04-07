@@ -7,36 +7,91 @@ using System.Drawing;
 
 public abstract class Shape
 {
-    public Color aMainPenColor { get; set; }    //Цвет пера
-    public Color aMainFillColor { get; set; }   //Цвет заливки
-    public float aMainPenWidth { get; set; }    //Толщина пера
+    protected Color mainPenColor;
+    protected Color mainFillColor;
+    protected float mainPenWidth;
+    protected Color preShowPenColor;
+    protected Color preShowFillColor;
+    protected float preShowPenWidth;
 
-    protected Color aPreShowPenColor { get; set; }    //Цвет пера предпросмотра
-    protected Color aPreShowFillColor { get; set; }   //Цвет заливки предпросмотра
-    protected float aPreShowPenWidth { get; set; }    //Толщина пера предпросмотра
+
+    public Color aMainPenColor //Цвет пера 
+    {
+        set
+        {
+            mainPenColor = value;
+        }
+    }    
+    public Color aMainFillColor    //Цвет заливки
+    {
+        set
+        {
+            mainFillColor = value;
+        }
+    }
+    public float aMainPenWidth     //Толщина пера
+    {
+        set
+        {
+            mainPenWidth = value;
+        }
+    }
+
+    public Color aPreShowPenColor    //Цвет пера предпросмотра
+    {
+        set
+        {
+            preShowPenColor = value;
+        }
+    }
+    public Color aPreShowFillColor   //Цвет заливки предпросмотра
+    {
+        set
+        {
+            preShowFillColor = value;
+        }
+    }
+    public float aPreShowPenWidth    //Толщина пера предпросмотра
+    {
+        set
+        {
+            preShowPenWidth = value;
+        }
+    }
 
     protected Pen mainPen;                  //Объект пера
     protected Pen preShowPen;               //Объект пера предпросмотра фигуры
     protected SolidBrush mainBrush;         //Объект кисти
     protected SolidBrush preShowBrush;      //Объект кисти предпросмотра фигуры
 
-    public bool isComplex;                  //Флаг, сложная ли фигура
     public bool isFinish;                   //Флаг, конец рисования фигуры
-    public Dictionary<int, Point> Location; //Словарь точек, описывающих положение фигуры
-    public int pointsNumber;                //Количество точек, описывающих положение фигуры
+    protected int pointsNumber;
+    public int PointsNumber                 //Количество точек, описывающих положение фигуры
+    {
+        get
+        {
+            return pointsNumber;
+        }
+    } 
 
     //Режим рисования фигуры(обычный, режим предпросмотра)
     public enum TShowMode { MAIN_MODE, PRE_SHOW };
     public TShowMode showMode;
 
+    public abstract bool isComplex();        //Метод возвращает константу сложная ли фигура
+
     public Shape()
     {
         isFinish = false;
-        isComplex = false;
         pointsNumber = 0;
-        Location = new Dictionary<int, Point>();
     }
 
     //Абстрактный метод для отрисовки фигуры
     public abstract void Draw(Graphics g);
+
+    //Установить следующую точку фигуры
+    public abstract void SetPoint(Point point);
+    
+    //Очистить информацию о точках фигуры 
+    public abstract void ClearPoints();
 }
