@@ -7,9 +7,9 @@ using System.Drawing;
 
 public abstract class Shape
 {
-    protected Color aMainPenColor { get; set; }    //Цвет пера
-    protected Color aMainFillColor { get; set; }   //Цвет заливки
-    protected float aMainPenWidth { get; set; }    //Толщина пера
+    public Color aMainPenColor { get; set; }    //Цвет пера
+    public Color aMainFillColor { get; set; }   //Цвет заливки
+    public float aMainPenWidth { get; set; }    //Толщина пера
 
     protected Color aPreShowPenColor { get; set; }    //Цвет пера предпросмотра
     protected Color aPreShowFillColor { get; set; }   //Цвет заливки предпросмотра
@@ -20,11 +20,23 @@ public abstract class Shape
     protected SolidBrush mainBrush;         //Объект кисти
     protected SolidBrush preShowBrush;      //Объект кисти предпросмотра фигуры
 
+    public bool isComplex;                  //Флаг, сложная ли фигура
+    public bool isFinish;                   //Флаг, конец рисования фигуры
+    public Dictionary<int, Point> Location; //Словарь точек, описывающих положение фигуры
+    public int pointsNumber;                //Количество точек, описывающих положение фигуры
+
     //Режим рисования фигуры(обычный, режим предпросмотра)
     public enum TShowMode { MAIN_MODE, PRE_SHOW };
     public TShowMode showMode;
 
+    public Shape()
+    {
+        isFinish = false;
+        isComplex = false;
+        pointsNumber = 0;
+        Location = new Dictionary<int, Point>();
+    }
+
     //Абстрактный метод для отрисовки фигуры
-    public abstract void Draw(Graphics g, float x1, float y1, float x2, float y2);
     public abstract void Draw(Graphics g);
 }

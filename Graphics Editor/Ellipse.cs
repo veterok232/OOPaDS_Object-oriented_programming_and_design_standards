@@ -5,9 +5,9 @@ using System.Drawing;
 
 public class Ellipse : Shape
 {
-    public Point p0 { set; get; }           //Координаты левого верхнего угла прямоугольника, в который вписан эллипс
-    public float ellWidth { set; get; }     //Ширина прямоугольника, в который вписан эллипс
-    public float ellHeight { set; get; }    //Высота прямоугольника, в который вписан эллипс
+    private Point p0;           //Координаты левого верхнего угла прямоугольника, в который вписан эллипс
+    private int ellWidth;       //Ширина прямоугольника, в который вписан эллипс
+    private int ellHeight;      //Высота прямоугольника, в который вписан эллипс
 
     //Конструктор
     public Ellipse(float width = 1) : this(Color.Black, Color.White, width) { }
@@ -25,31 +25,28 @@ public class Ellipse : Shape
         showMode = TShowMode.MAIN_MODE;
     }
 
-    //Метод отрисовки эллипса
-    public override void Draw(Graphics g, float x0, float y0, float width, float height)
-    {
-        if (showMode == TShowMode.MAIN_MODE)
-        {
-            g.FillEllipse(mainBrush, x0, y0, width, height);
-            g.DrawEllipse(mainPen, x0, y0, width, height);
-        }
-        else if (showMode == TShowMode.PRE_SHOW)
-        {
-            g.FillEllipse(preShowBrush, x0, y0, width, height);
-            g.DrawEllipse(preShowPen, x0, y0, width, height);
-        }
-    }
-
     //Отрисока эллипса по данным из полей класса
     public override void Draw(Graphics g)
     {
+        p0 = Location[1];
+        ellWidth = Location[2].X - Location[1].X;
+        ellHeight = Location[2].Y - Location[1].Y;
+
         if (showMode == TShowMode.MAIN_MODE)
         {
+            mainPen.Color = aMainPenColor;
+            mainBrush.Color = aMainFillColor;
+            mainPen.Width = aMainPenWidth;
+
             g.FillEllipse(mainBrush, p0.X, p0.Y, ellWidth, ellHeight);
             g.DrawEllipse(mainPen, p0.X, p0.Y, ellWidth, ellHeight);
         }
         else if (showMode == TShowMode.PRE_SHOW)
         {
+            preShowPen.Color = Color.FromArgb(150, aMainPenColor);
+            preShowBrush.Color = Color.FromArgb(150, aMainFillColor);
+            preShowPen.Width = aMainPenWidth;
+
             g.FillEllipse(preShowBrush, p0.X, p0.Y, ellWidth, ellHeight);
             g.DrawEllipse(preShowPen, p0.X, p0.Y, ellWidth, ellHeight);
         }
