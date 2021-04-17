@@ -78,4 +78,13 @@ public class Polygon : Shape
     {
         return true;
     }
+
+    //Метод для создания копии объекта фигуры
+    public override Shape Clone()
+    {
+        var clonePolygonPoints = new Dictionary<int, Point>(polygonPoints);
+        var newShape = (Polygon)this.MemberwiseClone();
+        newShape.polygonPoints = clonePolygonPoints;
+        return newShape;
+    }
 }

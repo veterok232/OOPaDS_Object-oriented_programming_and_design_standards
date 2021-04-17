@@ -1,4 +1,4 @@
-﻿namespace laba1
+﻿namespace Graphics_Editor
 {
     partial class frmMain
     {
@@ -263,7 +263,7 @@
             // 
             this.menuStripTools_LineWidth.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.menuStripTools_LineWidth.Name = "menuStripTools_LineWidth";
-            this.menuStripTools_LineWidth.Size = new System.Drawing.Size(203, 26);
+            this.menuStripTools_LineWidth.Size = new System.Drawing.Size(226, 26);
             this.menuStripTools_LineWidth.Text = "Толщина линии";
             // 
             // menuStripTools_LineColor
@@ -271,7 +271,7 @@
             this.menuStripTools_LineColor.Image = ((System.Drawing.Image)(resources.GetObject("menuStripTools_LineColor.Image")));
             this.menuStripTools_LineColor.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.menuStripTools_LineColor.Name = "menuStripTools_LineColor";
-            this.menuStripTools_LineColor.Size = new System.Drawing.Size(203, 26);
+            this.menuStripTools_LineColor.Size = new System.Drawing.Size(226, 26);
             this.menuStripTools_LineColor.Text = "Цвет линии";
             // 
             // menuStripTools_FillColor
@@ -279,27 +279,32 @@
             this.menuStripTools_FillColor.Image = ((System.Drawing.Image)(resources.GetObject("menuStripTools_FillColor.Image")));
             this.menuStripTools_FillColor.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.menuStripTools_FillColor.Name = "menuStripTools_FillColor";
-            this.menuStripTools_FillColor.Size = new System.Drawing.Size(203, 26);
+            this.menuStripTools_FillColor.Size = new System.Drawing.Size(226, 26);
             this.menuStripTools_FillColor.Text = "Цвет заливки";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(200, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(223, 6);
             // 
             // menuStripTools_Undo
             // 
             this.menuStripTools_Undo.Image = ((System.Drawing.Image)(resources.GetObject("menuStripTools_Undo.Image")));
             this.menuStripTools_Undo.Name = "menuStripTools_Undo";
-            this.menuStripTools_Undo.Size = new System.Drawing.Size(203, 26);
+            this.menuStripTools_Undo.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
+            this.menuStripTools_Undo.Size = new System.Drawing.Size(226, 26);
             this.menuStripTools_Undo.Text = "Undo";
+            this.menuStripTools_Undo.Click += new System.EventHandler(this.menuStripTools_Undo_Click);
             // 
             // menuStripTools_Redo
             // 
             this.menuStripTools_Redo.Image = ((System.Drawing.Image)(resources.GetObject("menuStripTools_Redo.Image")));
             this.menuStripTools_Redo.Name = "menuStripTools_Redo";
-            this.menuStripTools_Redo.Size = new System.Drawing.Size(203, 26);
+            this.menuStripTools_Redo.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.Z)));
+            this.menuStripTools_Redo.Size = new System.Drawing.Size(226, 26);
             this.menuStripTools_Redo.Text = "Redo";
+            this.menuStripTools_Redo.Click += new System.EventHandler(this.menuStripTools_Redo_Click);
             // 
             // menuSytripItem_About
             // 

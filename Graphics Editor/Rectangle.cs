@@ -96,4 +96,10 @@ public class Rectangle : Shape
     {
         return false;
     }
+
+    //Метод для создания копии объекта фигуры
+    public override Shape Clone()
+    {
+        return (Rectangle)this.MemberwiseClone();
+    }
 }

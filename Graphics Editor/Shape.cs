@@ -86,6 +86,9 @@ public abstract class Shape
         pointsNumber = 0;
     }
 
+    //Абстрактный метод для создания копии объекта фигуры
+    public abstract Shape Clone();
+
     //Абстрактный метод для отрисовки фигуры
     public abstract void Draw(Graphics g);
 

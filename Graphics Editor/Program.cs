@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace laba1
+namespace Graphics_Editor
 {
     static class Program
     {

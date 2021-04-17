@@ -55,4 +55,13 @@ public class BrokenLine : Shape
     {
         return true;
     }
+
+    //Метод для создания копии объекта фигуры
+    public override Shape Clone()
+    {
+        var cloneLinePoints = new Dictionary<int, Point>(linePoints);
+        var newShape = (BrokenLine)this.MemberwiseClone();
+        newShape.linePoints = cloneLinePoints;
+        return newShape;
+    }
 }

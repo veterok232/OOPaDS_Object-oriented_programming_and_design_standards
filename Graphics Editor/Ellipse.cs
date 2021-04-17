@@ -83,4 +83,10 @@ public class Ellipse : Shape
     {
         return false;
     }
+
+    //Метод для создания копии объекта фигуры
+    public override Shape Clone()
+    {
+        return (Ellipse)this.MemberwiseClone();
+    }
 }

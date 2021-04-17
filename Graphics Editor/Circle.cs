@@ -87,4 +87,10 @@ public class Circle : Shape
     {
         return false;
     }
+
+    //Метод для создания копии объекта фигуры
+    public override Shape Clone()
+    {
+        return (Circle)this.MemberwiseClone();
+    }
 }

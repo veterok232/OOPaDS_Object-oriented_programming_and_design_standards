@@ -11,6 +11,9 @@
 //В данной лабораторной работе была реализована возможность рисования фигур с помощью мыши, а также реализован
 //предпросмотр фигур при рисовании.
 
+//Четвертая лабораторная работа по ООП
+//В данной лабораторной работе был написан модуль, реализующий хранение фигур в списке, а также 
+//функции Undo(Ctrl+Z), Redo(Ctrl+Shift+Z) и функция отрисовки всего списка фигур
 
 using System;
 using System.Collections.Generic;
@@ -23,7 +26,7 @@ using System.Windows.Forms;
 using System.Drawing;
 
 
-namespace laba1
+namespace Graphics_Editor
 {
     public partial class frmMain : Form
     {
@@ -36,7 +39,6 @@ namespace laba1
         private Shape currentShape;                 //Объект текущей рисуемой фигуры
         private bool shapeInProgress = false;       //Флаг, рисуется ли текущая фигура
 
-        private Dictionary<int, Shape> shapes;      //Словарь объектов фигур
         private Shape preShowShape = null;          //Объект предпросмотра текущей рисуемой фигуры
         private int shapesNumber = 0;               //Количество нарисованных фигур
         private Bitmap preShowBuffer;               //Битмап для сохранения предыдущего состояния поля рисования
@@ -84,7 +86,6 @@ namespace laba1
 
             toolPanelBtn_Line.Checked = true;
 
-            shapes = new Dictionary<int, Shape>();
             currentShape = new Line(colorDialog_Line.Color, (float)selectLineWidth.Value);
             shapeInProgress = false;
             preShowShape = new Line(colorDialog_Line.Color, (float)selectLineWidth.Value);
@@ -299,7 +300,7 @@ namespace laba1
             this.Close();
         }
 
-        //---------------Пункт Инструменты в Главном меню--------------------------------
+        //---------------Пункт Рисование в Главном меню--------------------------------
 
         private void menuStripDrawing_Line_Click(object sender, EventArgs e)
         {
@@ -312,11 +313,6 @@ namespace laba1
             shapeInProgress = false;
             preShowShape = new Line(colorDialog_Line.Color, (float)selectLineWidth.Value);
             preShowShape.showMode = Shape.TShowMode.PRE_SHOW;
-
-            if (shapes.ContainsKey(shapesNumber))
-            {
-                shapes.Remove(shapesNumber);
-            }
         }
 
         private void menuStripDrawing_BrokenLine_Click(object sender, EventArgs e)
@@ -330,11 +326,6 @@ namespace laba1
             preShowShape = new Line(colorDialog_Line.Color, (float)selectLineWidth.Value);
             preShowShape.showMode = Shape.TShowMode.PRE_SHOW;
             shapeInProgress = false;
-
-            if (shapes.ContainsKey(shapesNumber))
-            {
-                shapes.Remove(shapesNumber);
-            }
         }
 
         private void menuStripDrawing_Rectangle_Click(object sender, EventArgs e)
@@ -348,11 +339,6 @@ namespace laba1
             shapeInProgress = false;
             preShowShape = new Rectangle(colorDialog_Line.Color, colorDialog_Fill.Color, (float)selectLineWidth.Value);
             preShowShape.showMode = Shape.TShowMode.PRE_SHOW;
-
-            if (shapes.ContainsKey(shapesNumber))
-            {
-                shapes.Remove(shapesNumber);
-            }
         }
 
         private void menuStripDrawing_Polygon_Click(object sender, EventArgs e)
@@ -366,11 +352,6 @@ namespace laba1
             preShowShape = new Line(colorDialog_Line.Color, (float)selectLineWidth.Value);
             preShowShape.showMode = Shape.TShowMode.PRE_SHOW;
             shapeInProgress = false;
-
-            if (shapes.ContainsKey(shapesNumber))
-            {
-                shapes.Remove(shapesNumber);
-            };
         }
 
         private void menuStripDrawing_Ellipse_Click(object sender, EventArgs e)
@@ -384,11 +365,6 @@ namespace laba1
             shapeInProgress = false;
             preShowShape = new Ellipse(colorDialog_Line.Color, colorDialog_Fill.Color, (float)selectLineWidth.Value);
             preShowShape.showMode = Shape.TShowMode.PRE_SHOW;
-
-            if (shapes.ContainsKey(shapesNumber))
-            {
-                shapes.Remove(shapesNumber);
-            }
         }
 
         private void menuStripDrawing_Circle_Click(object sender, EventArgs e)
@@ -402,11 +378,6 @@ namespace laba1
             shapeInProgress = false;
             preShowShape = new Circle(colorDialog_Line.Color, colorDialog_Fill.Color, (float)selectLineWidth.Value);
             preShowShape.showMode = Shape.TShowMode.PRE_SHOW;
-
-            if (shapes.ContainsKey(shapesNumber))
-            {
-                shapes.Remove(shapesNumber);
-            }
         }
 
         //---------------Кнопки на панели инструментов--------------------------------
@@ -417,11 +388,6 @@ namespace laba1
             shapeInProgress = false;
             preShowShape = new Line(colorDialog_Line.Color, (float)selectLineWidth.Value);
             preShowShape.showMode = Shape.TShowMode.PRE_SHOW;
-
-            if (shapes.ContainsKey(shapesNumber))
-            {
-                shapes.Remove(shapesNumber);
-            }
         }
 
         private void toolPanelBtn_BrokenLine_Click(object sender, EventArgs e)
@@ -430,11 +396,6 @@ namespace laba1
             preShowShape = new Line(colorDialog_Line.Color, (float)selectLineWidth.Value);
             preShowShape.showMode = Shape.TShowMode.PRE_SHOW;
             shapeInProgress = false;
-
-            if (shapes.ContainsKey(shapesNumber))
-            {
-                shapes.Remove(shapesNumber);
-            }
         }
 
         private void toolPanelBtn_Rectangle_Click(object sender, EventArgs e)
@@ -443,11 +404,6 @@ namespace laba1
             shapeInProgress = false;
             preShowShape = new Rectangle(colorDialog_Line.Color, colorDialog_Fill.Color, (float)selectLineWidth.Value);
             preShowShape.showMode = Shape.TShowMode.PRE_SHOW;
-
-            if (shapes.ContainsKey(shapesNumber))
-            {
-                shapes.Remove(shapesNumber);
-            }
         }
 
         private void toolPanelBtn_Polygon_Click(object sender, EventArgs e)
@@ -456,11 +412,6 @@ namespace laba1
             preShowShape = new Line(colorDialog_Line.Color, (float)selectLineWidth.Value);
             preShowShape.showMode = Shape.TShowMode.PRE_SHOW;
             shapeInProgress = false;
-
-            if (shapes.ContainsKey(shapesNumber))
-            {
-                shapes.Remove(shapesNumber);
-            }
         }
 
         private void toolPanelBtn_Ellipse_Click(object sender, EventArgs e)
@@ -469,11 +420,6 @@ namespace laba1
             shapeInProgress = false;
             preShowShape = new Ellipse(colorDialog_Line.Color, colorDialog_Fill.Color, (float)selectLineWidth.Value);
             preShowShape.showMode = Shape.TShowMode.PRE_SHOW;
-
-            if (shapes.ContainsKey(shapesNumber))
-            {
-                shapes.Remove(shapesNumber);
-            }
         }
 
         private void toolPanelBtn_Circle_Click(object sender, EventArgs e)
@@ -482,14 +428,9 @@ namespace laba1
             shapeInProgress = false;
             preShowShape = new Circle(colorDialog_Line.Color, colorDialog_Fill.Color, (float)selectLineWidth.Value);
             preShowShape.showMode = Shape.TShowMode.PRE_SHOW;
-
-            if (shapes.ContainsKey(shapesNumber))
-            {
-                shapes.Remove(shapesNumber);
-            }
         }
 
-        //----------------------------------------------------------------------
+        //---------------Пункт Инструменты в Главном меню--------------------------------
 
         //Выбор цвета линии
         private void toolPanelBtn_LineColor_Click(object sender, EventArgs e)
@@ -503,6 +444,28 @@ namespace laba1
         {
             if (colorDialog_Fill.ShowDialog() == DialogResult.Cancel)
                 return;
+        }
+
+        //Функция Undo
+        private void menuStripTools_Undo_Click(object sender, EventArgs e)
+        {
+            if (currentShape.isFinish)
+            {
+                ShapesList.Undo();
+                ShapesList.Draw(graphics);
+                cDrawField.Refresh();
+            }
+        }
+
+        //Функция Redo
+        private void menuStripTools_Redo_Click(object sender, EventArgs e)
+        {
+            if (currentShape.isFinish)
+            {
+                ShapesList.Redo();
+                ShapesList.Draw(graphics);
+                cDrawField.Refresh();
+            }
         }
 
         private void cDrawField_MouseClick(object sender, MouseEventArgs e)
@@ -556,7 +519,8 @@ namespace laba1
                         currentShape.SetPoint(e.Location);
                         currentShape.isFinish = true;
                         currentShape.Draw(graphics);
-                        shapes[shapesNumber++] = currentShape;
+                        ShapesList.Add(currentShape);
+                        ShapesList.ResetRedo();
                         currentShape.ClearPoints();
                         shapeInProgress = false;
                         preShowBuffer = new Bitmap((Bitmap)cDrawField.Image);
@@ -578,7 +542,8 @@ namespace laba1
                         {
                             currentShape.isFinish = true;
                             currentShape.Draw(graphics);
-                            shapes[shapesNumber++] = currentShape;
+                            ShapesList.Add(currentShape);
+                            ShapesList.ResetRedo();
                             preShowShape.ClearPoints();
                             currentShape.ClearPoints();
                             shapeInProgress = false;
@@ -612,6 +577,11 @@ namespace laba1
                 preShowShape.Draw(graphics);
                 cDrawField.Refresh();
             }
+        }
+
+        public void RefreshDrawField()
+        {
+            cDrawField.Refresh();
         }
 
         //Событие показа формы
