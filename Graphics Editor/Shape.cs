@@ -7,12 +7,12 @@ using System.Drawing;
 
 public abstract class Shape
 {
-    protected Color mainPenColor;
-    protected Color mainFillColor;
-    protected float mainPenWidth;
-    protected Color preShowPenColor;
-    protected Color preShowFillColor;
-    protected float preShowPenWidth;
+    public Color mainPenColor;
+    public Color mainFillColor;
+    public float mainPenWidth;
+    public Color preShowPenColor;
+    public Color preShowFillColor;
+    public float preShowPenWidth;
 
 
     public Color aMainPenColor //Цвет пера 
@@ -66,11 +66,23 @@ public abstract class Shape
 
     public bool isFinish;                   //Флаг, конец рисования фигуры
     protected int pointsNumber;
+
+    //Пара точек для простых фигур
+    public Point point1;
+    public Point point2;
+
+    //Массив точек для сложных фигур
+    public Point[] shapePoints;
+
     public int PointsNumber                 //Количество точек, описывающих положение фигуры
     {
         get
         {
             return pointsNumber;
+        }
+        set 
+        {
+            pointsNumber = value;
         }
     } 
 
@@ -82,8 +94,7 @@ public abstract class Shape
 
     public Shape()
     {
-        isFinish = false;
-        pointsNumber = 0;
+
     }
 
     //Абстрактный метод для создания копии объекта фигуры
@@ -94,6 +105,9 @@ public abstract class Shape
 
     //Установить следующую точку фигуры
     public abstract void SetPoint(Point point);
+
+    //Перенести точки фигуры из общего класса в дочерний
+    public abstract void SetPoints();
     
     //Очистить информацию о точках фигуры 
     public abstract void ClearPoints();

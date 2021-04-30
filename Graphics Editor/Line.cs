@@ -10,6 +10,11 @@ public class Line : Shape
     private Point p1;   //Первая точка отрезка
     private Point p2;   //Вторая точка отрезка
 
+    public Line()
+    {
+        mainPen = new Pen(mainPenColor, mainPenWidth);
+        preShowPen = new Pen(preShowPenColor, preShowPenWidth);
+    }
     public Line(float width = 1) : this(Color.Black, width) { }
     public Line(Color penColor, float width = 1)
     {
@@ -48,12 +53,24 @@ public class Line : Shape
     public override void SetPoint(Point point)
     {
         if (pointsNumber == 0)
+        {
             p1 = point;
+            point1 = point;
+        }
         else
+        {
             p2 = point;
+            point2 = point;
+        }
 
         if (pointsNumber < 2)
             pointsNumber++;
+    }
+
+    public override void SetPoints()
+    {
+        p1 = point1;
+        p2 = point2;
     }
 
     //Очистить информацию о точках отрезка
@@ -62,6 +79,8 @@ public class Line : Shape
         pointsNumber = 0;
         p1 = Point.Empty;
         p2 = Point.Empty;
+        point1 = Point.Empty;
+        point2 = Point.Empty;
     }
 
     //Фигура не сложная

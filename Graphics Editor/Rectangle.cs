@@ -13,7 +13,16 @@ public class Rectangle : Shape
     private int recHeight;      //Высота прямоугольника
 
     //Конструктор
+    public Rectangle()
+    {
+        mainPen = new Pen(mainPenColor, mainPenWidth);
+        mainBrush = new SolidBrush(mainFillColor);
+        preShowPen = new Pen(preShowPenColor, preShowPenWidth);
+        preShowBrush = new SolidBrush(preShowFillColor);
+    }
+
     public Rectangle(float width = 1) : this(Color.Black, Color.White, width) { }
+
     public Rectangle(Color penColor, Color fillColor, float width = 1)
     {
         aMainPenColor = penColor;
@@ -73,12 +82,24 @@ public class Rectangle : Shape
     public override void SetPoint(Point point)
     {
         if (pointsNumber == 0)
+        {
             p0 = point;
+            point1 = point;
+        }
         else
+        {
             p1 = point;
+            point2 = point;
+        }
 
         if (pointsNumber < 2)
             pointsNumber++;
+    }
+
+    public override void SetPoints()
+    {
+        p0 = point1;
+        p1 = point2;
     }
 
     //Очистить информацию о точках прямоугольника
@@ -87,6 +108,8 @@ public class Rectangle : Shape
         pointsNumber = 0;
         p0 = Point.Empty;
         p1 = Point.Empty;
+        point1 = Point.Empty;
+        point2 = Point.Empty;
         recHeight = 0;
         recWidth = 0;
     }

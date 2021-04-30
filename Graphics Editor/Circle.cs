@@ -14,7 +14,16 @@ public class Circle : Shape
     private float radius;       //Радиус круга
 
     //Конструктор
-    public Circle(float width = 1) : this(Color.Black, Color.White, width) { }
+    public Circle()
+    {
+        mainPen = new Pen(mainPenColor, mainPenWidth);
+        mainBrush = new SolidBrush(mainFillColor);
+        preShowPen = new Pen(preShowPenColor, preShowPenWidth);
+        preShowBrush = new SolidBrush(preShowFillColor);
+    }
+
+    public Circle(float width = 1) : this(Color.Black, Color.White, width) {  }
+
     public Circle(Color penColor, Color fillColor, float width = 1)
     {
         aMainPenColor = penColor;
@@ -64,9 +73,15 @@ public class Circle : Shape
     public override void SetPoint(Point point)
     {
         if (pointsNumber == 0)
+        {
             p0 = point;
+            point1 = point;
+        }
         else
+        {
             p1 = point;
+            point2 = point;
+        }
 
         if (pointsNumber < 2)
             pointsNumber++;
@@ -78,8 +93,16 @@ public class Circle : Shape
         pointsNumber = 0;
         p0 = Point.Empty;
         p1 = Point.Empty;
+        point1 = Point.Empty;
+        point2 = Point.Empty;
         cirWidth = 0;
         cirHeight = 0;
+    }
+
+    public override void SetPoints()
+    {
+        p0 = point1;
+        p1 = point2;
     }
 
     //Фигура не сложная

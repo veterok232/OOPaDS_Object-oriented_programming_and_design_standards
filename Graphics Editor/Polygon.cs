@@ -10,7 +10,16 @@ public class Polygon : Shape
     private Dictionary<int, Point> polygonPoints;   //Словарь точек многоугольника
 
     //Конструктор
-    public Polygon(float width = 1) : this(Color.Black, Color.White, width) { }
+    public Polygon()
+    {
+        mainPen = new Pen(mainPenColor, mainPenWidth);
+        mainBrush = new SolidBrush(mainFillColor);
+        preShowPen = new Pen(preShowPenColor, preShowPenWidth);
+        preShowBrush = new SolidBrush(preShowFillColor);
+    }
+
+    public Polygon(float width = 1) : this(Color.Black, Color.White, width) {  }
+
     public Polygon(Color penColor, Color fillColor, float width = 1)
     {
         aMainPenColor = penColor;
@@ -64,6 +73,20 @@ public class Polygon : Shape
     public override void SetPoint(Point point)
     {
         polygonPoints[++pointsNumber] = point;
+
+        shapePoints = new Point[pointsNumber];
+        polygonPoints.Values.CopyTo(shapePoints, 0);
+    }
+
+    public override void SetPoints()
+    {
+        polygonPoints = new Dictionary<int, Point>();
+        int count = 0;
+
+        foreach (var point in shapePoints)
+        {
+            polygonPoints[++count] = point;
+        }
     }
 
     //Очистить информацию о точках многоугольника
@@ -71,6 +94,7 @@ public class Polygon : Shape
     {
         pointsNumber = 0;
         polygonPoints.Clear();
+        shapePoints = null;
     }
 
     //Фигура сложная

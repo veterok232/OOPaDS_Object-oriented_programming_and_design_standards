@@ -11,6 +11,13 @@ public class Ellipse : Shape
     private int ellHeight;      //Высота прямоугольника, в который вписан эллипс
 
     //Конструктор
+    public Ellipse()
+    {
+        mainPen = new Pen(mainPenColor, mainPenWidth);
+        mainBrush = new SolidBrush(mainFillColor);
+        preShowPen = new Pen(preShowPenColor, preShowPenWidth);
+        preShowBrush = new SolidBrush(preShowFillColor);
+    }
     public Ellipse(float width = 1) : this(Color.Black, Color.White, width) { }
     public Ellipse(Color penColor, Color fillColor, float width = 1)
     {
@@ -60,12 +67,24 @@ public class Ellipse : Shape
     public override void SetPoint(Point point)
     {
         if (pointsNumber == 0)
+        {
             p0 = point;
+            point1 = point;
+        }
         else
+        {
             p1 = point;
+            point2 = point;
+        }
 
         if (pointsNumber < 2)
             pointsNumber++;
+    }
+
+    public override void SetPoints()
+    {
+        p0 = point1;
+        p1 = point2;
     }
 
     //Очистить информацию о точках эллипса
@@ -74,6 +93,8 @@ public class Ellipse : Shape
         pointsNumber = 0;
         p0 = Point.Empty;
         p1 = Point.Empty;
+        point1 = Point.Empty;
+        point2 = Point.Empty;
         ellWidth = 0;
         ellHeight = 0;
     }

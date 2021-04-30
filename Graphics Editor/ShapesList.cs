@@ -6,14 +6,14 @@ using System.Drawing;
 
 namespace Graphics_Editor
 {
-    public static class ShapesList
+    public class ShapesList
     {
-        private static Dictionary<int, Shape> shapesList;       //Список текущих фигур
-        private static Dictionary<int, Shape> shapesListRedo;   //Список фигур, которые были отменены
-        private static int shapesNumber;                        //Количество текущих фигур
-        private static int shapesNumberRedo;                    //Количество отмененных фигур
+        public Dictionary<int, Shape> shapesList;       //Список текущих фигур
+        private Dictionary<int, Shape> shapesListRedo;   //Список фигур, которые были отменены
+        private int shapesNumber;                        //Количество текущих фигур
+        private int shapesNumberRedo;                    //Количество отмененных фигур
 
-        static ShapesList()
+        public ShapesList()
         {
             shapesList = new Dictionary<int, Shape>();
             shapesListRedo = new Dictionary<int, Shape>();
@@ -22,13 +22,13 @@ namespace Graphics_Editor
         }
 
         //Добавление фигуры в список
-        public static void Add(Shape shape)
+        public void Add(Shape shape)
         {
             shapesList[++shapesNumber] = shape.Clone();
         }
 
         //Функция Undo
-        public static void Undo()
+        public void Undo()
         {
             if (shapesNumber > 0)
             {
@@ -39,7 +39,7 @@ namespace Graphics_Editor
         }
 
         //Функция Redo
-        public static void Redo()
+        public void Redo()
         {
             if (shapesNumberRedo > 0)
             {
@@ -50,14 +50,20 @@ namespace Graphics_Editor
         }
 
         //Функция сброса списка Redo
-        public static void ResetRedo()
+        public void ResetRedo()
         {
             shapesListRedo.Clear();
             shapesNumberRedo = 0;
         }
 
+        public void Clear()
+        {
+            shapesList.Clear();
+            shapesListRedo.Clear();
+        }
+
         //Отрисовка всего списка фигур
-        public static void Draw(Graphics g)
+        public void Draw(Graphics g)
         {
             g.Clear(Color.White);
 

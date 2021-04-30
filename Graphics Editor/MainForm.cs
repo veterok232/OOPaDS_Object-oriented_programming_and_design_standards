@@ -15,6 +15,10 @@
 //В данной лабораторной работе был написан модуль, реализующий хранение фигур в списке, а также 
 //функции Undo(Ctrl+Z), Redo(Ctrl+Shift+Z) и функция отрисовки всего списка фигур
 
+//Пятая лабораторная работа по ООП
+//В данной лабораторной работе были реализованы функции сериализации и десериализации фигур в формат json
+//Эти функции находятся в Главном меню во вкладке Файл->Сериализация(Десериализация)
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -24,7 +28,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing;
-
+using Newtonsoft.Json;
+using System.IO;
 
 namespace Graphics_Editor
 {
@@ -36,11 +41,11 @@ namespace Graphics_Editor
         private int activeTab;                           //Номер текущей активной вкладки
         private int picturesCounter = 0;                 //Количество открытых вкладок
 
+        private Dictionary<int, ShapesList> tabShapesList;
         private Shape currentShape;                 //Объект текущей рисуемой фигуры
         private bool shapeInProgress = false;       //Флаг, рисуется ли текущая фигура
 
         private Shape preShowShape = null;          //Объект предпросмотра текущей рисуемой фигуры
-        private int shapesNumber = 0;               //Количество нарисованных фигур
         private Bitmap preShowBuffer;               //Битмап для сохранения предыдущего состояния поля рисования
                                                     //для реализации предпросмотра
 
@@ -91,6 +96,9 @@ namespace Graphics_Editor
             preShowShape = new Line(colorDialog_Line.Color, (float)selectLineWidth.Value);
             preShowShape.showMode = Shape.TShowMode.PRE_SHOW;
             preShowBuffer = new Bitmap(cDrawField.Image);
+
+            tabShapesList = new Dictionary<int, ShapesList>();
+            tabShapesList[picturesCounter] = new ShapesList();
         }
 
         //Отмена рисования текущей фигуры
@@ -144,6 +152,8 @@ namespace Graphics_Editor
             activeTab = picturesCounter;
 
             preShowBuffer = new Bitmap(cDrawField.Image);
+
+            tabShapesList[picturesCounter] = new ShapesList();
             //Сброс фокуса
             btnResetTab.Focus();
         }
@@ -201,6 +211,7 @@ namespace Graphics_Editor
             activeTab = picturesCounter;
             cDrawField.Refresh();
 
+            tabShapesList[picturesCounter] = new ShapesList();
             //Сброс фокуса
             btnResetTab.Focus();
         }
@@ -255,6 +266,90 @@ namespace Graphics_Editor
             }
         }
 
+        private void menuStripItemFile_Serialize_Click(object sender, EventArgs e)
+        {
+            var saveFileAs = new SaveFileDialog();
+            saveFileAs.Filter = @"File json (*.json)|*.json";
+            saveFileAs.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+
+            if (saveFileAs.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                //Получение пути к файлу
+                string filename = saveFileAs.FileName;
+
+                try
+                {
+                    cancelDrawing();
+                    //Сериализация
+                    var currShape = tabShapesList[activeTab].shapesList;
+
+                    Newtonsoft.Json.JsonSerializer serializer = new Newtonsoft.Json.JsonSerializer();
+                    serializer.Converters.Add(new Newtonsoft.Json.Converters.JavaScriptDateTimeConverter());
+                    serializer.NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore;
+                    serializer.TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto;
+                    serializer.Formatting = Newtonsoft.Json.Formatting.Indented;
+
+                    using (StreamWriter sw = new StreamWriter(filename))
+                    using (Newtonsoft.Json.JsonWriter writer = new Newtonsoft.Json.JsonTextWriter(sw))
+                    {
+                        serializer.Serialize(writer, currShape);
+                    }
+
+                    tabButtons[activeTab].Text = filename;
+                }
+                catch (Exception error)
+                {
+                    MessageBox.Show(error.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                }
+
+            }
+        }
+
+        private void menuStripItemFile_Deserialize_Click(object sender, EventArgs e)
+        {
+            var openFileDialog = new OpenFileDialog();
+            openFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            openFileDialog.Filter = @"File json (*.json)|*.json";
+
+            if (openFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                try
+                {
+                    //Отмена рисования текущей фигуры
+                    cancelDrawing();
+
+                    // Получение пути к файлу
+                    var filename = openFileDialog.FileName;
+
+                    //Создание новой вкладки
+                    menuStripItemFile_Create_Click(frmMain.ActiveForm, EventArgs.Empty);
+
+                    //Десериализация
+                    var currShape = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<int, Shape>>(File.ReadAllText(filename), new Newtonsoft.Json.JsonSerializerSettings
+                    {
+                        TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto,
+                        NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore,
+                    });
+                    foreach (KeyValuePair<int, Shape> pair in currShape)
+                    {
+                        pair.Value.SetPoints();
+                        tabShapesList[activeTab].Add(pair.Value);
+                    }
+
+                    tabButtons[activeTab].Text = filename;
+                    tabShapesList[activeTab].Draw(graphics);
+                    cDrawField.Refresh();
+                    pictures[activeTab] = new Bitmap(cDrawField.Image);
+                    preShowBuffer = new Bitmap(cDrawField.Image);
+                    shapeInProgress = false;
+                }
+                catch (Exception error)
+                {
+                    MessageBox.Show(error.Message, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                }
+            }
+        }
+
         //Закрытие активной вкладки
         private void menuStripItemFile_ExitCurrent_Click(object sender, EventArgs e)
         {
@@ -262,6 +357,7 @@ namespace Graphics_Editor
 
             if (picturesCounter > 1)
             {
+                tabShapesList.Remove(activeTab);
                 pictures.Remove(activeTab);
                 tabButtons[activeTab].Dispose();
                 tabButtons.Remove(activeTab);
@@ -284,8 +380,14 @@ namespace Graphics_Editor
                     Bitmap tempBitmap = pictures[key];
                     pictures.Remove(key);
                     pictures[key - 1] = tempBitmap;
+
+                    var tempShapeList = tabShapesList[key];
+                    tabShapesList.Remove(key);
+                    tabShapesList[key - 1] = tempShapeList;
                 }
 
+                preShowBuffer = new Bitmap(pictures[picturesCounter]);
+                activeTab = picturesCounter;
                 tabOnClick(tabButtons[picturesCounter], EventArgs.Empty);
             }
             else
@@ -449,22 +551,26 @@ namespace Graphics_Editor
         //Функция Undo
         private void menuStripTools_Undo_Click(object sender, EventArgs e)
         {
-            if (currentShape.isFinish)
+            if (!shapeInProgress)
             {
-                ShapesList.Undo();
-                ShapesList.Draw(graphics);
+                tabShapesList[activeTab].Undo();
+                tabShapesList[activeTab].Draw(graphics);
                 cDrawField.Refresh();
+                pictures[activeTab] = new Bitmap(cDrawField.Image);
+                preShowBuffer = new Bitmap(cDrawField.Image);
             }
         }
 
         //Функция Redo
         private void menuStripTools_Redo_Click(object sender, EventArgs e)
         {
-            if (currentShape.isFinish)
+            if (!shapeInProgress)
             {
-                ShapesList.Redo();
-                ShapesList.Draw(graphics);
+                tabShapesList[activeTab].Redo();
+                tabShapesList[activeTab].Draw(graphics);
                 cDrawField.Refresh();
+                pictures[activeTab] = new Bitmap(cDrawField.Image);
+                preShowBuffer = new Bitmap(cDrawField.Image);
             }
         }
 
@@ -519,8 +625,8 @@ namespace Graphics_Editor
                         currentShape.SetPoint(e.Location);
                         currentShape.isFinish = true;
                         currentShape.Draw(graphics);
-                        ShapesList.Add(currentShape);
-                        ShapesList.ResetRedo();
+                        tabShapesList[activeTab].Add(currentShape);
+                        tabShapesList[activeTab].ResetRedo();
                         currentShape.ClearPoints();
                         shapeInProgress = false;
                         preShowBuffer = new Bitmap((Bitmap)cDrawField.Image);
@@ -542,8 +648,8 @@ namespace Graphics_Editor
                         {
                             currentShape.isFinish = true;
                             currentShape.Draw(graphics);
-                            ShapesList.Add(currentShape);
-                            ShapesList.ResetRedo();
+                            tabShapesList[activeTab].Add(currentShape);
+                            tabShapesList[activeTab].ResetRedo();
                             preShowShape.ClearPoints();
                             currentShape.ClearPoints();
                             shapeInProgress = false;

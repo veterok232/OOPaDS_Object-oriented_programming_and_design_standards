@@ -81,6 +81,8 @@
             this.btnResetTab = new System.Windows.Forms.Button();
             this.cPanelDrawField = new System.Windows.Forms.Panel();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.menuStripItemFile_Deserialize = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStripItemFile_Serialize = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.selectLineWidth)).BeginInit();
             this.toolPanel.SuspendLayout();
@@ -113,6 +115,8 @@
             this.menuStripItemFile_Open,
             this.menuStripItemFile_Save,
             this.menuStripItemFile_SaveAs,
+            this.menuStripItemFile_Serialize,
+            this.menuStripItemFile_Deserialize,
             this.toolStripSeparator2,
             this.menuStripItemFile_ExitCurrent,
             this.menuStripItemFile_Exit});
@@ -126,7 +130,7 @@
             this.menuStripItemFile_Create.Image = ((System.Drawing.Image)(resources.GetObject("menuStripItemFile_Create.Image")));
             this.menuStripItemFile_Create.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.menuStripItemFile_Create.Name = "menuStripItemFile_Create";
-            this.menuStripItemFile_Create.Size = new System.Drawing.Size(211, 26);
+            this.menuStripItemFile_Create.Size = new System.Drawing.Size(214, 26);
             this.menuStripItemFile_Create.Text = "Создать";
             this.menuStripItemFile_Create.Click += new System.EventHandler(this.menuStripItemFile_Create_Click);
             // 
@@ -135,7 +139,7 @@
             this.menuStripItemFile_Open.Image = ((System.Drawing.Image)(resources.GetObject("menuStripItemFile_Open.Image")));
             this.menuStripItemFile_Open.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.menuStripItemFile_Open.Name = "menuStripItemFile_Open";
-            this.menuStripItemFile_Open.Size = new System.Drawing.Size(211, 26);
+            this.menuStripItemFile_Open.Size = new System.Drawing.Size(214, 26);
             this.menuStripItemFile_Open.Text = "Открыть";
             this.menuStripItemFile_Open.Click += new System.EventHandler(this.menuStripItemFile_Open_Click);
             // 
@@ -144,7 +148,7 @@
             this.menuStripItemFile_Save.Image = ((System.Drawing.Image)(resources.GetObject("menuStripItemFile_Save.Image")));
             this.menuStripItemFile_Save.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.menuStripItemFile_Save.Name = "menuStripItemFile_Save";
-            this.menuStripItemFile_Save.Size = new System.Drawing.Size(211, 26);
+            this.menuStripItemFile_Save.Size = new System.Drawing.Size(214, 26);
             this.menuStripItemFile_Save.Text = "Сохранить";
             this.menuStripItemFile_Save.Click += new System.EventHandler(this.menuStripItemFile_Save_Click);
             // 
@@ -153,19 +157,19 @@
             this.menuStripItemFile_SaveAs.Image = ((System.Drawing.Image)(resources.GetObject("menuStripItemFile_SaveAs.Image")));
             this.menuStripItemFile_SaveAs.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.menuStripItemFile_SaveAs.Name = "menuStripItemFile_SaveAs";
-            this.menuStripItemFile_SaveAs.Size = new System.Drawing.Size(211, 26);
+            this.menuStripItemFile_SaveAs.Size = new System.Drawing.Size(214, 26);
             this.menuStripItemFile_SaveAs.Text = "Сохранить как";
             this.menuStripItemFile_SaveAs.Click += new System.EventHandler(this.menuStripItemFile_SaveAs_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(208, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(211, 6);
             // 
             // menuStripItemFile_ExitCurrent
             // 
             this.menuStripItemFile_ExitCurrent.Name = "menuStripItemFile_ExitCurrent";
-            this.menuStripItemFile_ExitCurrent.Size = new System.Drawing.Size(211, 26);
+            this.menuStripItemFile_ExitCurrent.Size = new System.Drawing.Size(214, 26);
             this.menuStripItemFile_ExitCurrent.Text = "Закрыть текущий";
             this.menuStripItemFile_ExitCurrent.Click += new System.EventHandler(this.menuStripItemFile_ExitCurrent_Click);
             // 
@@ -173,7 +177,7 @@
             // 
             this.menuStripItemFile_Exit.Image = ((System.Drawing.Image)(resources.GetObject("menuStripItemFile_Exit.Image")));
             this.menuStripItemFile_Exit.Name = "menuStripItemFile_Exit";
-            this.menuStripItemFile_Exit.Size = new System.Drawing.Size(211, 26);
+            this.menuStripItemFile_Exit.Size = new System.Drawing.Size(214, 26);
             this.menuStripItemFile_Exit.Text = "Выход";
             this.menuStripItemFile_Exit.Click += new System.EventHandler(this.menuStripItemFile_Exit_Click);
             // 
@@ -601,6 +605,20 @@
             this.cPanelDrawField.Size = new System.Drawing.Size(1342, 613);
             this.cPanelDrawField.TabIndex = 9;
             // 
+            // menuStripItemFile_Deserialize
+            // 
+            this.menuStripItemFile_Deserialize.Name = "menuStripItemFile_Deserialize";
+            this.menuStripItemFile_Deserialize.Size = new System.Drawing.Size(214, 26);
+            this.menuStripItemFile_Deserialize.Text = "Десериализовать";
+            this.menuStripItemFile_Deserialize.Click += new System.EventHandler(this.menuStripItemFile_Deserialize_Click);
+            // 
+            // menuStripItemFile_Serialize
+            // 
+            this.menuStripItemFile_Serialize.Name = "menuStripItemFile_Serialize";
+            this.menuStripItemFile_Serialize.Size = new System.Drawing.Size(214, 26);
+            this.menuStripItemFile_Serialize.Text = "Сериализовать";
+            this.menuStripItemFile_Serialize.Click += new System.EventHandler(this.menuStripItemFile_Serialize_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -697,6 +715,8 @@
         private System.Windows.Forms.RadioButton radioButton5;
         private System.Windows.Forms.RadioButton toolPanelBtn_Circle;
         private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.ToolStripMenuItem menuStripItemFile_Deserialize;
+        private System.Windows.Forms.ToolStripMenuItem menuStripItemFile_Serialize;
     }
 }
 
