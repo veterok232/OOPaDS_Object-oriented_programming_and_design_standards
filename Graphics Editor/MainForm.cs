@@ -19,6 +19,13 @@
 //В данной лабораторной работе были реализованы функции сериализации и десериализации фигур в формат json
 //Эти функции находятся в Главном меню во вкладке Файл->Сериализация(Десериализация)
 
+//Шестая лабораторная работа по ООП
+//В данной лабораторной работе была реализована поддержка плагинов для добавления новых фигур.
+//Плагин представляет .dll файл, в котором описан класс новой фигуры
+//Добавление плагина происходит при клике на кнопку Плагины->Добавить плагин(Ctrl+P), далее нужно 
+//выбрать нужный плагин в списке загруженных плагинов в той же вкладке Плагины.
+//Также были исправлены некоторые баги в работе программы
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -30,6 +37,7 @@ using System.Windows.Forms;
 using System.Drawing;
 using Newtonsoft.Json;
 using System.IO;
+using System.Reflection;
 
 namespace Graphics_Editor
 {
@@ -48,6 +56,14 @@ namespace Graphics_Editor
         private Shape preShowShape = null;          //Объект предпросмотра текущей рисуемой фигуры
         private Bitmap preShowBuffer;               //Битмап для сохранения предыдущего состояния поля рисования
                                                     //для реализации предпросмотра
+
+        // Список плагинов
+        public static Dictionary<int, Type> pluginsList = new Dictionary<int, Type>();
+        // Начальное смещение плагинов в списке, их количество и номер текущего плагина
+        private int initialPluginNumber = 2;
+        private int pluginsCount = 0;
+        private int currentPluginNumber = -1;
+        private string currentPlugin = "";
 
         //Конструктор формы
         public frmMain()
@@ -99,6 +115,8 @@ namespace Graphics_Editor
 
             tabShapesList = new Dictionary<int, ShapesList>();
             tabShapesList[picturesCounter] = new ShapesList();
+
+            lblActivePlugin.Text = "";
         }
 
         //Отмена рисования текущей фигуры
@@ -406,6 +424,7 @@ namespace Graphics_Editor
 
         private void menuStripDrawing_Line_Click(object sender, EventArgs e)
         {
+            lblActivePlugin.Text = "";
             toolPanelBtn_Line.Checked = true;
 
             //Сброс фокуса
@@ -419,6 +438,7 @@ namespace Graphics_Editor
 
         private void menuStripDrawing_BrokenLine_Click(object sender, EventArgs e)
         {
+            lblActivePlugin.Text = "";
             toolPanelBtn_BrokenLine.Checked = true;
 
             //Сброс фокуса
@@ -432,6 +452,7 @@ namespace Graphics_Editor
 
         private void menuStripDrawing_Rectangle_Click(object sender, EventArgs e)
         {
+            lblActivePlugin.Text = "";
             toolPanelBtn_Rectangle.Checked = true;
 
             //Сброс фокуса
@@ -445,6 +466,7 @@ namespace Graphics_Editor
 
         private void menuStripDrawing_Polygon_Click(object sender, EventArgs e)
         {
+            lblActivePlugin.Text = "";
             toolPanelBtn_Polygon.Checked = true;
 
             //Сброс фокуса
@@ -458,6 +480,7 @@ namespace Graphics_Editor
 
         private void menuStripDrawing_Ellipse_Click(object sender, EventArgs e)
         {
+            lblActivePlugin.Text = "";
             toolPanelBtn_Ellipse.Checked = true;
 
             //Сброс фокуса
@@ -471,6 +494,7 @@ namespace Graphics_Editor
 
         private void menuStripDrawing_Circle_Click(object sender, EventArgs e)
         {
+            lblActivePlugin.Text = "";
             toolPanelBtn_Circle.Checked = true;
 
             //Сброс фокуса
@@ -486,6 +510,7 @@ namespace Graphics_Editor
 
         private void toolPanelBtn_Line_Click(object sender, EventArgs e)
         {
+            lblActivePlugin.Text = "";
             currentShape = new Line(colorDialog_Line.Color, (float)selectLineWidth.Value);
             shapeInProgress = false;
             preShowShape = new Line(colorDialog_Line.Color, (float)selectLineWidth.Value);
@@ -494,6 +519,7 @@ namespace Graphics_Editor
 
         private void toolPanelBtn_BrokenLine_Click(object sender, EventArgs e)
         {
+            lblActivePlugin.Text = "";
             currentShape = new BrokenLine(colorDialog_Line.Color, (float)selectLineWidth.Value);
             preShowShape = new Line(colorDialog_Line.Color, (float)selectLineWidth.Value);
             preShowShape.showMode = Shape.TShowMode.PRE_SHOW;
@@ -502,6 +528,7 @@ namespace Graphics_Editor
 
         private void toolPanelBtn_Rectangle_Click(object sender, EventArgs e)
         {
+            lblActivePlugin.Text = "";
             currentShape = new Rectangle(colorDialog_Line.Color, colorDialog_Fill.Color, (float)selectLineWidth.Value);
             shapeInProgress = false;
             preShowShape = new Rectangle(colorDialog_Line.Color, colorDialog_Fill.Color, (float)selectLineWidth.Value);
@@ -510,6 +537,7 @@ namespace Graphics_Editor
 
         private void toolPanelBtn_Polygon_Click(object sender, EventArgs e)
         {
+            lblActivePlugin.Text = "";
             currentShape = new Polygon(colorDialog_Line.Color, colorDialog_Fill.Color, (float)selectLineWidth.Value); ;
             preShowShape = new Line(colorDialog_Line.Color, (float)selectLineWidth.Value);
             preShowShape.showMode = Shape.TShowMode.PRE_SHOW;
@@ -518,6 +546,7 @@ namespace Graphics_Editor
 
         private void toolPanelBtn_Ellipse_Click(object sender, EventArgs e)
         {
+            lblActivePlugin.Text = "";
             currentShape = new Ellipse(colorDialog_Line.Color, colorDialog_Fill.Color, (float)selectLineWidth.Value); ;
             shapeInProgress = false;
             preShowShape = new Ellipse(colorDialog_Line.Color, colorDialog_Fill.Color, (float)selectLineWidth.Value);
@@ -526,6 +555,7 @@ namespace Graphics_Editor
 
         private void toolPanelBtn_Circle_Click(object sender, EventArgs e)
         {
+            lblActivePlugin.Text = "";
             currentShape = new Circle(colorDialog_Line.Color, colorDialog_Fill.Color, (float)selectLineWidth.Value); ;
             shapeInProgress = false;
             preShowShape = new Circle(colorDialog_Line.Color, colorDialog_Fill.Color, (float)selectLineWidth.Value);
@@ -543,6 +573,18 @@ namespace Graphics_Editor
 
         //Выбор цвета заливки
         private void toolPanelBtn_FillColor_Click(object sender, EventArgs e)
+        {
+            if (colorDialog_Fill.ShowDialog() == DialogResult.Cancel)
+                return;
+        }
+
+        private void menuStripTools_LineColor_Click(object sender, EventArgs e)
+        {
+            if (colorDialog_Line.ShowDialog() == DialogResult.Cancel)
+                return;
+        }
+
+        private void menuStripTools_FillColor_Click(object sender, EventArgs e)
         {
             if (colorDialog_Fill.ShowDialog() == DialogResult.Cancel)
                 return;
@@ -572,6 +614,12 @@ namespace Graphics_Editor
                 pictures[activeTab] = new Bitmap(cDrawField.Image);
                 preShowBuffer = new Bitmap(cDrawField.Image);
             }
+        }
+
+        private void menuStripItem_About_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Данный графический редактор был разработан в рамках цикла лабораторных работ по дисциплине ООТПиСП.\r\n" +
+                "\r\nТимофеев Андрей, группа 951004");
         }
 
         private void cDrawField_MouseClick(object sender, MouseEventArgs e)
@@ -694,6 +742,78 @@ namespace Graphics_Editor
         private void frmMain_Shown(object sender, EventArgs e)
         {
             cDrawField.Refresh();
+        }
+
+        private void ResetToolButtons()
+        {
+            toolPanelBtn_Line.Checked = false;
+            toolPanelBtn_BrokenLine.Checked = false;
+            toolPanelBtn_Rectangle.Checked = false;
+            toolPanelBtn_Polygon.Checked = false;
+            toolPanelBtn_Ellipse.Checked = false;
+            toolPanelBtn_Circle.Checked = false;
+        }
+
+        //Добавление нового плагина
+        private void menuStripPlugins_Add_Click(object sender, EventArgs e)
+        {
+            var dlgFileOpen = new OpenFileDialog();
+            dlgFileOpen.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            dlgFileOpen.Filter = @"File dll (*.dll)|*.dll";
+
+            if (dlgFileOpen.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                // Получение пути к файлу
+                var filename = dlgFileOpen.FileName;
+
+                try
+                {
+                    // Получение экземпляра плагина
+                    Assembly asm = Assembly.LoadFrom(filename);
+                    Type pluginType = asm.GetTypes()[0];
+                    pluginsList[pluginsCount] = pluginType;
+
+                    //Создание кнопки во вкладке Плагины
+                    var currPlugin = new ToolStripMenuItem();
+                    menuStripItem_Plugins.DropDownItems.Add(currPlugin);
+                    menuStripItem_Plugins.DropDownItems[initialPluginNumber + pluginsCount].Name = Convert.ToString(pluginsCount);
+                    menuStripItem_Plugins.DropDownItems[initialPluginNumber + pluginsCount].Text = pluginType.Name;
+                    menuStripItem_Plugins.DropDownItems[initialPluginNumber + pluginsCount].DisplayStyle = ToolStripItemDisplayStyle.Text;
+                    menuStripItem_Plugins.DropDownItems[initialPluginNumber + pluginsCount].Click += PluginOnClick;
+
+                    pluginsCount++;
+                }
+                catch (Exception error)
+                {
+                    MessageBox.Show(error.Message, "Ошибка...", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                }
+            }
+        }
+
+        //Загрузка объекта фигуры из плагина
+        private void PluginOnClick(object sender, EventArgs e)
+        {
+            try
+            {
+                currentPlugin = (sender as ToolStripMenuItem).Name;
+                lblActivePlugin.Text = "Активный плагин: " + menuStripItem_Plugins.DropDownItems[initialPluginNumber + Convert.ToInt32(currentPlugin)].Text;
+                ResetToolButtons();
+
+                currentShape = (Shape)Activator.CreateInstance(pluginsList[Convert.ToInt32(currentPlugin)], colorDialog_Line.Color,
+                                                                colorDialog_Fill.Color, (float)selectLineWidth.Value);
+                shapeInProgress = false;
+                preShowShape = (Shape)Activator.CreateInstance(pluginsList[Convert.ToInt32(currentPlugin)], colorDialog_Line.Color,
+                                                                colorDialog_Fill.Color, (float)selectLineWidth.Value);
+                preShowShape.showMode = Shape.TShowMode.PRE_SHOW;
+                btnResetTab.Focus();
+            }
+            catch { }
+        }
+
+        // Определение номера нажатого плагина
+        private void menuStripItem_Plugins_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            currentPlugin = e.ClickedItem.Name;
         }
     }
 }

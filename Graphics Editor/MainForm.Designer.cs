@@ -36,6 +36,8 @@
             this.menuStripItemFile_Open = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripItemFile_Save = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripItemFile_SaveAs = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStripItemFile_Serialize = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStripItemFile_Deserialize = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStripItemFile_ExitCurrent = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripItemFile_Exit = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,13 +49,15 @@
             this.menuStripDrawing_Ellipse = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripDrawing_Circle = new System.Windows.Forms.ToolStripMenuItem();
             this.menuSytripItem_Tools = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuStripTools_LineWidth = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripTools_LineColor = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripTools_FillColor = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStripTools_Undo = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripTools_Redo = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuSytripItem_About = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStripItem_Plugins = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuStripPlugins_Add = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.menuStripItem_About = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,6 +76,7 @@
             this.toolPanelBtn_LineColor = new System.Windows.Forms.Button();
             this.label3 = new System.Windows.Forms.Label();
             this.toolPanelBtn_FillColor = new System.Windows.Forms.Button();
+            this.lblActivePlugin = new System.Windows.Forms.Label();
             this.tabsPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.saveFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog = new System.Windows.Forms.OpenFileDialog();
@@ -81,8 +86,6 @@
             this.btnResetTab = new System.Windows.Forms.Button();
             this.cPanelDrawField = new System.Windows.Forms.Panel();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.menuStripItemFile_Deserialize = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuStripItemFile_Serialize = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.selectLineWidth)).BeginInit();
             this.toolPanel.SuspendLayout();
@@ -98,7 +101,8 @@
             this.menuStripItem_File,
             this.menuStripItem_Drawing,
             this.menuSytripItem_Tools,
-            this.menuSytripItem_About});
+            this.menuStripItem_Plugins,
+            this.menuStripItem_About});
             this.menuStripMain.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.HorizontalStackWithOverflow;
             this.menuStripMain.Location = new System.Drawing.Point(0, 0);
             this.menuStripMain.Name = "menuStripMain";
@@ -130,7 +134,8 @@
             this.menuStripItemFile_Create.Image = ((System.Drawing.Image)(resources.GetObject("menuStripItemFile_Create.Image")));
             this.menuStripItemFile_Create.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.menuStripItemFile_Create.Name = "menuStripItemFile_Create";
-            this.menuStripItemFile_Create.Size = new System.Drawing.Size(214, 26);
+            this.menuStripItemFile_Create.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.menuStripItemFile_Create.Size = new System.Drawing.Size(267, 26);
             this.menuStripItemFile_Create.Text = "Создать";
             this.menuStripItemFile_Create.Click += new System.EventHandler(this.menuStripItemFile_Create_Click);
             // 
@@ -139,7 +144,7 @@
             this.menuStripItemFile_Open.Image = ((System.Drawing.Image)(resources.GetObject("menuStripItemFile_Open.Image")));
             this.menuStripItemFile_Open.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.menuStripItemFile_Open.Name = "menuStripItemFile_Open";
-            this.menuStripItemFile_Open.Size = new System.Drawing.Size(214, 26);
+            this.menuStripItemFile_Open.Size = new System.Drawing.Size(267, 26);
             this.menuStripItemFile_Open.Text = "Открыть";
             this.menuStripItemFile_Open.Click += new System.EventHandler(this.menuStripItemFile_Open_Click);
             // 
@@ -148,7 +153,7 @@
             this.menuStripItemFile_Save.Image = ((System.Drawing.Image)(resources.GetObject("menuStripItemFile_Save.Image")));
             this.menuStripItemFile_Save.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.menuStripItemFile_Save.Name = "menuStripItemFile_Save";
-            this.menuStripItemFile_Save.Size = new System.Drawing.Size(214, 26);
+            this.menuStripItemFile_Save.Size = new System.Drawing.Size(267, 26);
             this.menuStripItemFile_Save.Text = "Сохранить";
             this.menuStripItemFile_Save.Click += new System.EventHandler(this.menuStripItemFile_Save_Click);
             // 
@@ -157,27 +162,52 @@
             this.menuStripItemFile_SaveAs.Image = ((System.Drawing.Image)(resources.GetObject("menuStripItemFile_SaveAs.Image")));
             this.menuStripItemFile_SaveAs.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.menuStripItemFile_SaveAs.Name = "menuStripItemFile_SaveAs";
-            this.menuStripItemFile_SaveAs.Size = new System.Drawing.Size(214, 26);
+            this.menuStripItemFile_SaveAs.Size = new System.Drawing.Size(267, 26);
             this.menuStripItemFile_SaveAs.Text = "Сохранить как";
             this.menuStripItemFile_SaveAs.Click += new System.EventHandler(this.menuStripItemFile_SaveAs_Click);
+            // 
+            // menuStripItemFile_Serialize
+            // 
+            this.menuStripItemFile_Serialize.Image = ((System.Drawing.Image)(resources.GetObject("menuStripItemFile_Serialize.Image")));
+            this.menuStripItemFile_Serialize.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.menuStripItemFile_Serialize.Name = "menuStripItemFile_Serialize";
+            this.menuStripItemFile_Serialize.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.menuStripItemFile_Serialize.Size = new System.Drawing.Size(267, 26);
+            this.menuStripItemFile_Serialize.Text = "Сериализовать";
+            this.menuStripItemFile_Serialize.Click += new System.EventHandler(this.menuStripItemFile_Serialize_Click);
+            // 
+            // menuStripItemFile_Deserialize
+            // 
+            this.menuStripItemFile_Deserialize.Image = ((System.Drawing.Image)(resources.GetObject("menuStripItemFile_Deserialize.Image")));
+            this.menuStripItemFile_Deserialize.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.menuStripItemFile_Deserialize.Name = "menuStripItemFile_Deserialize";
+            this.menuStripItemFile_Deserialize.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.menuStripItemFile_Deserialize.Size = new System.Drawing.Size(267, 26);
+            this.menuStripItemFile_Deserialize.Text = "Десериализовать";
+            this.menuStripItemFile_Deserialize.Click += new System.EventHandler(this.menuStripItemFile_Deserialize_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(211, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(264, 6);
             // 
             // menuStripItemFile_ExitCurrent
             // 
+            this.menuStripItemFile_ExitCurrent.Image = ((System.Drawing.Image)(resources.GetObject("menuStripItemFile_ExitCurrent.Image")));
+            this.menuStripItemFile_ExitCurrent.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.menuStripItemFile_ExitCurrent.Name = "menuStripItemFile_ExitCurrent";
-            this.menuStripItemFile_ExitCurrent.Size = new System.Drawing.Size(214, 26);
+            this.menuStripItemFile_ExitCurrent.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
+            this.menuStripItemFile_ExitCurrent.Size = new System.Drawing.Size(267, 26);
             this.menuStripItemFile_ExitCurrent.Text = "Закрыть текущий";
             this.menuStripItemFile_ExitCurrent.Click += new System.EventHandler(this.menuStripItemFile_ExitCurrent_Click);
             // 
             // menuStripItemFile_Exit
             // 
             this.menuStripItemFile_Exit.Image = ((System.Drawing.Image)(resources.GetObject("menuStripItemFile_Exit.Image")));
+            this.menuStripItemFile_Exit.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.menuStripItemFile_Exit.Name = "menuStripItemFile_Exit";
-            this.menuStripItemFile_Exit.Size = new System.Drawing.Size(214, 26);
+            this.menuStripItemFile_Exit.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
+            this.menuStripItemFile_Exit.Size = new System.Drawing.Size(267, 26);
             this.menuStripItemFile_Exit.Text = "Выход";
             this.menuStripItemFile_Exit.Click += new System.EventHandler(this.menuStripItemFile_Exit_Click);
             // 
@@ -253,7 +283,6 @@
             // 
             this.menuSytripItem_Tools.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.menuSytripItem_Tools.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuStripTools_LineWidth,
             this.menuStripTools_LineColor,
             this.menuStripTools_FillColor,
             this.toolStripSeparator1,
@@ -263,13 +292,6 @@
             this.menuSytripItem_Tools.Size = new System.Drawing.Size(117, 24);
             this.menuSytripItem_Tools.Text = "Инструменты";
             // 
-            // menuStripTools_LineWidth
-            // 
-            this.menuStripTools_LineWidth.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.menuStripTools_LineWidth.Name = "menuStripTools_LineWidth";
-            this.menuStripTools_LineWidth.Size = new System.Drawing.Size(226, 26);
-            this.menuStripTools_LineWidth.Text = "Толщина линии";
-            // 
             // menuStripTools_LineColor
             // 
             this.menuStripTools_LineColor.Image = ((System.Drawing.Image)(resources.GetObject("menuStripTools_LineColor.Image")));
@@ -277,6 +299,7 @@
             this.menuStripTools_LineColor.Name = "menuStripTools_LineColor";
             this.menuStripTools_LineColor.Size = new System.Drawing.Size(226, 26);
             this.menuStripTools_LineColor.Text = "Цвет линии";
+            this.menuStripTools_LineColor.Click += new System.EventHandler(this.menuStripTools_LineColor_Click);
             // 
             // menuStripTools_FillColor
             // 
@@ -285,6 +308,7 @@
             this.menuStripTools_FillColor.Name = "menuStripTools_FillColor";
             this.menuStripTools_FillColor.Size = new System.Drawing.Size(226, 26);
             this.menuStripTools_FillColor.Text = "Цвет заливки";
+            this.menuStripTools_FillColor.Click += new System.EventHandler(this.menuStripTools_FillColor_Click);
             // 
             // toolStripSeparator1
             // 
@@ -310,12 +334,38 @@
             this.menuStripTools_Redo.Text = "Redo";
             this.menuStripTools_Redo.Click += new System.EventHandler(this.menuStripTools_Redo_Click);
             // 
-            // menuSytripItem_About
+            // menuStripItem_Plugins
             // 
-            this.menuSytripItem_About.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.menuSytripItem_About.Name = "menuSytripItem_About";
-            this.menuSytripItem_About.Size = new System.Drawing.Size(118, 24);
-            this.menuSytripItem_About.Text = "О программе";
+            this.menuStripItem_Plugins.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStripPlugins_Add,
+            this.toolStripSeparator3});
+            this.menuStripItem_Plugins.Name = "menuStripItem_Plugins";
+            this.menuStripItem_Plugins.Size = new System.Drawing.Size(85, 24);
+            this.menuStripItem_Plugins.Text = "Плагины";
+            this.menuStripItem_Plugins.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuStripItem_Plugins_ItemClicked);
+            // 
+            // menuStripPlugins_Add
+            // 
+            this.menuStripPlugins_Add.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.menuStripPlugins_Add.Name = "menuStripPlugins_Add";
+            this.menuStripPlugins_Add.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
+            this.menuStripPlugins_Add.Size = new System.Drawing.Size(262, 26);
+            this.menuStripPlugins_Add.Text = "Добавить плагин";
+            this.menuStripPlugins_Add.TextImageRelation = System.Windows.Forms.TextImageRelation.TextAboveImage;
+            this.menuStripPlugins_Add.Click += new System.EventHandler(this.menuStripPlugins_Add_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(259, 6);
+            // 
+            // menuStripItem_About
+            // 
+            this.menuStripItem_About.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.menuStripItem_About.Name = "menuStripItem_About";
+            this.menuStripItem_About.Size = new System.Drawing.Size(118, 24);
+            this.menuStripItem_About.Text = "О программе";
+            this.menuStripItem_About.Click += new System.EventHandler(this.menuStripItem_About_Click);
             // 
             // toolStripMenuItem1
             // 
@@ -389,6 +439,7 @@
             this.toolPanel.Controls.Add(this.toolPanelBtn_LineColor);
             this.toolPanel.Controls.Add(this.label3);
             this.toolPanel.Controls.Add(this.toolPanelBtn_FillColor);
+            this.toolPanel.Controls.Add(this.lblActivePlugin);
             this.toolPanel.Dock = System.Windows.Forms.DockStyle.Top;
             this.toolPanel.Location = new System.Drawing.Point(0, 28);
             this.toolPanel.Margin = new System.Windows.Forms.Padding(0);
@@ -541,6 +592,18 @@
             this.toolPanelBtn_FillColor.UseVisualStyleBackColor = true;
             this.toolPanelBtn_FillColor.Click += new System.EventHandler(this.toolPanelBtn_FillColor_Click);
             // 
+            // lblActivePlugin
+            // 
+            this.lblActivePlugin.AutoSize = true;
+            this.lblActivePlugin.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblActivePlugin.Font = new System.Drawing.Font("Segoe UI", 10.8F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point);
+            this.lblActivePlugin.Location = new System.Drawing.Point(901, 12);
+            this.lblActivePlugin.Margin = new System.Windows.Forms.Padding(8, 12, 4, 0);
+            this.lblActivePlugin.Name = "lblActivePlugin";
+            this.lblActivePlugin.Size = new System.Drawing.Size(187, 25);
+            this.lblActivePlugin.TabIndex = 17;
+            this.lblActivePlugin.Text = "Активный плагин: ";
+            // 
             // tabsPanel
             // 
             this.tabsPanel.AutoScroll = true;
@@ -605,20 +668,6 @@
             this.cPanelDrawField.Size = new System.Drawing.Size(1342, 613);
             this.cPanelDrawField.TabIndex = 9;
             // 
-            // menuStripItemFile_Deserialize
-            // 
-            this.menuStripItemFile_Deserialize.Name = "menuStripItemFile_Deserialize";
-            this.menuStripItemFile_Deserialize.Size = new System.Drawing.Size(214, 26);
-            this.menuStripItemFile_Deserialize.Text = "Десериализовать";
-            this.menuStripItemFile_Deserialize.Click += new System.EventHandler(this.menuStripItemFile_Deserialize_Click);
-            // 
-            // menuStripItemFile_Serialize
-            // 
-            this.menuStripItemFile_Serialize.Name = "menuStripItemFile_Serialize";
-            this.menuStripItemFile_Serialize.Size = new System.Drawing.Size(214, 26);
-            this.menuStripItemFile_Serialize.Text = "Сериализовать";
-            this.menuStripItemFile_Serialize.Click += new System.EventHandler(this.menuStripItemFile_Serialize_Click);
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
@@ -653,7 +702,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuStripItem_File;
         private System.Windows.Forms.ToolStripMenuItem menuStripItem_Drawing;
         private System.Windows.Forms.ToolStripMenuItem menuSytripItem_Tools;
-        private System.Windows.Forms.ToolStripMenuItem menuSytripItem_About;
+        private System.Windows.Forms.ToolStripMenuItem menuStripItem_About;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
         private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
@@ -677,7 +726,6 @@
         private System.Windows.Forms.ToolStripMenuItem menuStripTools_Undo;
         private System.Windows.Forms.ToolStripMenuItem menuStripTools_Redo;
         private System.Windows.Forms.ToolStrip toolStrip;
-        private System.Windows.Forms.ToolStripMenuItem menuStripTools_LineWidth;
         private System.Windows.Forms.ToolStripMenuItem menuStripTools_LineColor;
         private System.Windows.Forms.ToolStripMenuItem menuStripItemFile_Exit;
         private System.Windows.Forms.ToolStripButton newToolStripButton;
@@ -717,6 +765,11 @@
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.ToolStripMenuItem menuStripItemFile_Deserialize;
         private System.Windows.Forms.ToolStripMenuItem menuStripItemFile_Serialize;
+        private System.Windows.Forms.ToolStripMenuItem menuStripItem_Plugins;
+        private System.Windows.Forms.ToolStripMenuItem menuStripPlugins_Add;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.ToolStripMenuItem menuSytripItem_About;
+        private System.Windows.Forms.Label lblActivePlugin;
     }
 }
 

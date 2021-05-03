@@ -5,94 +5,96 @@ using System.Collections.Generic;
 using System.Text;
 using System.Drawing;
 
-public class Line : Shape
+namespace Graphics_Editor
 {
-    private Point p1;   //Первая точка отрезка
-    private Point p2;   //Вторая точка отрезка
-
-    public Line()
+    public class Line : Shape
     {
-        mainPen = new Pen(mainPenColor, mainPenWidth);
-        preShowPen = new Pen(preShowPenColor, preShowPenWidth);
-    }
-    public Line(float width = 1) : this(Color.Black, width) { }
-    public Line(Color penColor, float width = 1)
-    {
-        aMainPenColor = penColor;
-        aMainPenWidth = width;
-        aPreShowPenWidth = width;
-        mainPen = new Pen(mainPenColor, mainPenWidth);
-        aPreShowPenColor = Color.FromArgb(150, penColor);
-        preShowPen = new Pen(preShowPenColor, preShowPenWidth);
-        showMode = TShowMode.MAIN_MODE;
-    }
+        private Point p1;   //Первая точка отрезка
+        private Point p2;   //Вторая точка отрезка
 
-    //Отрисовка линии по данным из полей класса
-    public override void Draw(Graphics g)
-    {
-        if (pointsNumber != 2)
-            return;
-
-        if (showMode == TShowMode.MAIN_MODE)
+        public Line()
         {
-            mainPen.Color = mainPenColor;
-            mainPen.Width = mainPenWidth;
-
-            g.DrawLine(mainPen, p1, p2);
+            mainPen = new Pen(mainPenColor, mainPenWidth);
+            preShowPen = new Pen(preShowPenColor, preShowPenWidth);
         }
-        else if (showMode == TShowMode.PRE_SHOW)
+        public Line(float width = 1) : this(Color.Black, width) { }
+        public Line(Color penColor, float width = 1)
         {
-            preShowPen.Color = Color.FromArgb(150, preShowPenColor);
-            preShowPen.Width = preShowPenWidth;
-
-            g.DrawLine(preShowPen, p1, p2);
-        }
-    }
-
-    //Установить очередную точку отрезка
-    public override void SetPoint(Point point)
-    {
-        if (pointsNumber == 0)
-        {
-            p1 = point;
-            point1 = point;
-        }
-        else
-        {
-            p2 = point;
-            point2 = point;
+            aMainPenColor = penColor;
+            aMainPenWidth = width;
+            aPreShowPenWidth = width;
+            mainPen = new Pen(mainPenColor, mainPenWidth);
+            aPreShowPenColor = Color.FromArgb(150, penColor);
+            preShowPen = new Pen(preShowPenColor, preShowPenWidth);
+            showMode = TShowMode.MAIN_MODE;
         }
 
-        if (pointsNumber < 2)
-            pointsNumber++;
-    }
+        //Отрисовка линии по данным из полей класса
+        public override void Draw(Graphics g)
+        {
+            if (pointsNumber != 2)
+                return;
 
-    public override void SetPoints()
-    {
-        p1 = point1;
-        p2 = point2;
-    }
+            if (showMode == TShowMode.MAIN_MODE)
+            {
+                mainPen.Color = mainPenColor;
+                mainPen.Width = mainPenWidth;
 
-    //Очистить информацию о точках отрезка
-    public override void ClearPoints()
-    {
-        pointsNumber = 0;
-        p1 = Point.Empty;
-        p2 = Point.Empty;
-        point1 = Point.Empty;
-        point2 = Point.Empty;
-    }
+                g.DrawLine(mainPen, p1, p2);
+            }
+            else if (showMode == TShowMode.PRE_SHOW)
+            {
+                preShowPen.Color = Color.FromArgb(150, preShowPenColor);
+                preShowPen.Width = preShowPenWidth;
 
-    //Фигура не сложная
-    public override bool isComplex()
-    {
-        return false;
-    }
+                g.DrawLine(preShowPen, p1, p2);
+            }
+        }
 
-    //Метод для создания копии объекта фигуры
-    public override Shape Clone()
-    {
-        return (Line)this.MemberwiseClone();
+        //Установить очередную точку отрезка
+        public override void SetPoint(Point point)
+        {
+            if (pointsNumber == 0)
+            {
+                p1 = point;
+                point1 = point;
+            }
+            else
+            {
+                p2 = point;
+                point2 = point;
+            }
+
+            if (pointsNumber < 2)
+                pointsNumber++;
+        }
+
+        public override void SetPoints()
+        {
+            p1 = point1;
+            p2 = point2;
+        }
+
+        //Очистить информацию о точках отрезка
+        public override void ClearPoints()
+        {
+            pointsNumber = 0;
+            p1 = Point.Empty;
+            p2 = Point.Empty;
+            point1 = Point.Empty;
+            point2 = Point.Empty;
+        }
+
+        //Фигура не сложная
+        public override bool isComplex()
+        {
+            return false;
+        }
+
+        //Метод для создания копии объекта фигуры
+        public override Shape Clone()
+        {
+            return (Line)this.MemberwiseClone();
+        }
     }
 }
-
