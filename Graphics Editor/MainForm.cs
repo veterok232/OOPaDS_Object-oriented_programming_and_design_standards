@@ -774,7 +774,7 @@ namespace Graphics_Editor
 
                     foreach (Type pluginType in pluginTypes)
                     {
-                        if (pluginType.BaseType == typeof(Shape))
+                        if (typeof(Shape).IsAssignableFrom(pluginType))
                         {
                             pluginsList[pluginsCount] = pluginType;
                             //Создание кнопки во вкладке Плагины
