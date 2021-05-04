@@ -770,18 +770,24 @@ namespace Graphics_Editor
                 {
                     // Получение экземпляра плагина
                     Assembly asm = Assembly.LoadFrom(filename);
-                    Type pluginType = asm.GetTypes()[0];
-                    pluginsList[pluginsCount] = pluginType;
+                    Type[] pluginTypes = asm.GetTypes();
 
-                    //Создание кнопки во вкладке Плагины
-                    var currPlugin = new ToolStripMenuItem();
-                    menuStripItem_Plugins.DropDownItems.Add(currPlugin);
-                    menuStripItem_Plugins.DropDownItems[initialPluginNumber + pluginsCount].Name = Convert.ToString(pluginsCount);
-                    menuStripItem_Plugins.DropDownItems[initialPluginNumber + pluginsCount].Text = pluginType.Name;
-                    menuStripItem_Plugins.DropDownItems[initialPluginNumber + pluginsCount].DisplayStyle = ToolStripItemDisplayStyle.Text;
-                    menuStripItem_Plugins.DropDownItems[initialPluginNumber + pluginsCount].Click += PluginOnClick;
+                    foreach (Type pluginType in pluginTypes)
+                    {
+                        if (pluginType.BaseType == typeof(Shape))
+                        {
+                            pluginsList[pluginsCount] = pluginType;
+                            //Создание кнопки во вкладке Плагины
+                            var currPlugin = new ToolStripMenuItem();
+                            menuStripItem_Plugins.DropDownItems.Add(currPlugin);
+                            menuStripItem_Plugins.DropDownItems[initialPluginNumber + pluginsCount].Name = Convert.ToString(pluginsCount);
+                            menuStripItem_Plugins.DropDownItems[initialPluginNumber + pluginsCount].Text = pluginType.Name;
+                            menuStripItem_Plugins.DropDownItems[initialPluginNumber + pluginsCount].DisplayStyle = ToolStripItemDisplayStyle.Text;
+                            menuStripItem_Plugins.DropDownItems[initialPluginNumber + pluginsCount].Click += PluginOnClick;
 
-                    pluginsCount++;
+                            pluginsCount++;
+                        }
+                    } 
                 }
                 catch (Exception error)
                 {
